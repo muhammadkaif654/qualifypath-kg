@@ -151,7 +151,7 @@ def path_graph(kg_: KG, paths, max_paths: int = 12) -> str:
             a, b = nid(h.s), nid(h.o)
             pred = str(h.p).rsplit("#", 1)[-1]
             edges[(a, b, pred)] = colours.get(h.provenance.split(" ")[0], "#64748b")
-    lines = ['digraph G { rankdir=LR; bgcolor="transparent"; pad=0.2; nodesep=0.25; ranksep=0.5;',
+    lines = ['digraph G { rankdir=LR; bgcolor="transparent"; pad=0.2; nodesep=0.25; ranksep=0.5; size="13,7";',
              'node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10, '
              'fillcolor="#eef2ff", color="#6366f1"]; edge [fontname="Helvetica", fontsize=8];']
     for _, (n, label, literal) in nodes.items():

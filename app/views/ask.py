@@ -97,7 +97,7 @@ with tab_graph:
     if paths:
         st.caption("Entities and values (amber) on the multi-hop paths; edge colour = provenance "
                    "(green explicit · blue OWL-inferred · purple rule-derived).")
-        st.graphviz_chart(ui.path_graph(kg, paths), use_container_width=True)
+        st.graphviz_chart(ui.path_graph(kg, paths), use_container_width=False)
         for res in r.results:
             with st.expander(("🧪 " if res.scenario else "🧭 ") + res.question + (" — scenario" if res.scenario else "")):
                 for s in res.steps:
