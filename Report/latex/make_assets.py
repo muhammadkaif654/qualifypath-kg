@@ -22,7 +22,7 @@ ROOT = HERE.parent.parent
 FIG, GEN = HERE / "figures", HERE / "generated"
 FIG.mkdir(exist_ok=True)
 (GEN / "queries").mkdir(parents=True, exist_ok=True)
-REPO_URL = "https://github.com/muhammadkaif654/qualithpath-kg"
+REPO_URL = "https://github.com/muhammadkaif654/qualifypath-kg"
 
 UNI = {"→": r"$\rightarrow$", "⟶": r"$\rightarrow$", "➜": r"$\rightarrow$", "←": r"$\leftarrow$",
        "–": "--", "—": "---", "‑": "-", "−": "-", "’": "'", "‘": "`", "“": "``", "”": "''", "≥": r"$\geq$",

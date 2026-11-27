@@ -22,7 +22,7 @@ Open `config.tex` and replace:
 | Placeholder | Replace with |
 | --- | --- |
 | `TALHA-GITHUB-USERNAME`, `HASEEB-GITHUB-USERNAME` | your teammates' GitHub usernames |
-| `\commitsTalha`, `\commitsHaseeb` | links to 2–4 of their commits, e.g. `\href{https://github.com/muhammadkaif654/qualithpath-kg/commit/abc1234}{\texttt{abc1234}} ontology \newline ...` |
+| `\commitsTalha`, `\commitsHaseeb` | links to 2–4 of their commits, e.g. `\href{https://github.com/muhammadkaif654/qualifypath-kg/commit/abc1234}{\texttt{abc1234}} ontology \newline ...` |
 | `https://ADD-YOUR-DEMO-VIDEO-LINK` | the link to your 3–5 minute demo video (YouTube unlisted or Google Drive "anyone with the link") |
 
 Keep URLs inside `\url{...}` or `\href{...}{...}`; in normal text write `\_` for `_` and `\&` for `&`.
