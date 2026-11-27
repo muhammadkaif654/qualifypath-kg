@@ -1,0 +1,17 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# build outputs
+AI3001_Iteration1_*.zip
+Report/*.pdf~
+~$*
+.streamlit/secrets.toml
+
+# local tooling
+.claude/

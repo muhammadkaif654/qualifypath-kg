@@ -1,0 +1,8 @@
+rdflib>=7.0
+owlrl>=7.0
+pandas>=2.0
+networkx>=3.0
+matplotlib>=3.7
+streamlit>=1.40
+groq>=0.30
+python-dotenv>=1.0
