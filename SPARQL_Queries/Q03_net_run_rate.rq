@@ -1,0 +1,28 @@
+# Q03 - CQ3: Each team's net run rate, computed from innings.
+#   An all-out innings counts as the full quota; rain-shortened match 13 uses its reduced overs.
+# Features: aggregation, OPTIONAL (qp:oversPerSide exists only on shortened matches), VALUES, BIND/IF
+
+PREFIX qp:     <http://example.org/qualifypath/ontology#>
+PREFIX season: <http://example.org/qualifypath/resource/season/>
+
+SELECT ?team (SUM(?rf) AS ?runsFor) (SUM(?bf) AS ?ballsFaced)
+       (SUM(?ra) AS ?runsAgainst) (SUM(?bb) AS ?ballsBowled)
+       (ROUND((SUM(?rf) / (SUM(?bf) / 6) - SUM(?ra) / (SUM(?bb) / 6)) * 1000) / 1000 AS ?netRunRate)
+WHERE {
+  VALUES ?role { "bat" "bowl" }
+  season:IPL-2026 qp:oversQuota ?quota .
+  ?m qp:inSeason season:IPL-2026 ;
+     qp:hasInnings ?inn .
+  OPTIONAL { ?m qp:oversPerSide ?shortened }
+  ?inn qp:battingTeam ?bat ; qp:bowlingTeam ?bowl ;
+       qp:runs ?runs ; qp:ballsFaced ?balls ; qp:allOut ?allOut .
+  BIND(IF(?allOut, COALESCE(?shortened, ?quota) * 6, ?balls) AS ?nrrBalls)
+  BIND(IF(?role = "bat", ?bat, ?bowl) AS ?t)
+  ?t qp:shortName ?team .
+  BIND(IF(?role = "bat", ?runs, 0) AS ?rf)
+  BIND(IF(?role = "bat", ?nrrBalls, 0) AS ?bf)
+  BIND(IF(?role = "bowl", ?runs, 0) AS ?ra)
+  BIND(IF(?role = "bowl", ?nrrBalls, 0) AS ?bb)
+}
+GROUP BY ?team
+ORDER BY DESC(?netRunRate)

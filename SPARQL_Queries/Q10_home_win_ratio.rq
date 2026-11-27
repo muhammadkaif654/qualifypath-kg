@@ -1,0 +1,19 @@
+# Q10 - CQ14: Which teams have won at least half of their decided matches at a home venue?
+# Features: aggregation with HAVING (filter on an aggregate), FILTER NOT EXISTS,
+#   multi-hop (team -> home venue <- match)
+
+PREFIX qp: <http://example.org/qualifypath/ontology#>
+
+SELECT ?team (COUNT(?m) AS ?homeMatches) (SUM(?w) AS ?homeWins)
+       (ROUND(SUM(?w) / COUNT(?m) * 100) AS ?winPercent)
+WHERE {
+  ?t qp:shortName ?team ;
+     qp:homeVenue ?v ;
+     qp:participatesIn ?m .
+  ?m qp:playedAt ?v .
+  FILTER NOT EXISTS { ?m a qp:NoResultMatch }
+  BIND(IF(EXISTS { ?m qp:hasWinner ?t }, 1, 0) AS ?w)
+}
+GROUP BY ?team
+HAVING (SUM(?w) / COUNT(?m) >= 0.5)
+ORDER BY DESC(?winPercent) ?team

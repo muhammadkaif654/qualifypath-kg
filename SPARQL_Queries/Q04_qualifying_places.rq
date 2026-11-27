@@ -1,0 +1,18 @@
+# Q04 - CQ2: Which teams currently hold the qualifying places, after points and the tie-break?
+# Features: reads rule results (R1, R2, R7); compares position with the season's qualifyingPlaces
+#   (property path qp:hasQualificationRule/qp:qualifyingPlaces)
+
+PREFIX qp:     <http://example.org/qualifypath/ontology#>
+PREFIX season: <http://example.org/qualifypath/resource/season/>
+
+SELECT ?position ?team ?points ?netRunRate ?inQualifyingPlace
+WHERE {
+  season:IPL-2026 qp:hasQualificationRule/qp:qualifyingPlaces ?places .
+  ?se qp:standingIn season:IPL-2026 ;
+      qp:standingOf/qp:shortName ?team ;
+      qp:position ?position ;
+      qp:points ?points ;
+      qp:netRunRate ?netRunRate .
+  BIND(?position <= ?places AS ?inQualifyingPlace)
+}
+ORDER BY ?position

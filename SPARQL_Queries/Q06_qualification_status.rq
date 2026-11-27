@@ -1,0 +1,23 @@
+# Q06 - CQ5, CQ6, CQ7: Highest reachable points, and which teams are qualified, eliminated
+#   or still in contention.
+# Features: reads rule-inferred classes (R4-R6); FILTER picks the specific status subclass
+#   of qp:StandingEntry.
+
+PREFIX qp:     <http://example.org/qualifypath/ontology#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX season: <http://example.org/qualifypath/resource/season/>
+
+SELECT ?team ?points ?remainingFixtures ?maxReachablePoints ?status
+WHERE {
+  ?se qp:standingIn season:IPL-2026 ;
+      qp:standingOf/qp:shortName ?team ;
+      qp:points ?points ;
+      qp:maxReachablePoints ?maxReachablePoints ;
+      a ?statusClass .
+  ?statusClass rdfs:subClassOf qp:StandingEntry ;
+               rdfs:label ?status .
+  FILTER(?statusClass != qp:StandingEntry)
+  season:IPL-2026 qp:hasPointsRule/qp:pointsForWin ?winPts .
+  BIND((?maxReachablePoints - ?points) / ?winPts AS ?remainingFixtures)
+}
+ORDER BY DESC(?points) DESC(?maxReachablePoints)

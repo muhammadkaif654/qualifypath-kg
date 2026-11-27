@@ -1,0 +1,26 @@
+# Q11 - CQ8 (and CQ9): Which of RR's remaining opponents are direct rivals (still in contention),
+#   and how far apart on points are they?
+# Features: multi-hop (RR -> fixture -> opponent <- standing entry), rule-inferred class
+#   (qp:InContentionStanding from R6), FILTER, ORDER BY a computed value
+
+PREFIX qp:   <http://example.org/qualifypath/ontology#>
+PREFIX team: <http://example.org/qualifypath/resource/team/>
+
+SELECT ?matchNumber ?date ?opponent ?opponentPosition ?opponentPoints ?rrPoints ?pointsGap
+WHERE {
+  team:RR qp:participatesIn ?m .
+  ?m a qp:ScheduledMatch ;
+     qp:matchNumber ?matchNumber ;
+     qp:matchDate ?date ;
+     qp:hasParticipant ?opp .
+  FILTER(?opp != team:RR)
+  ?oppSe qp:standingOf ?opp ;
+         a qp:InContentionStanding ;
+         qp:points ?opponentPoints ;
+         qp:position ?opponentPosition .
+  ?rrSe qp:standingOf team:RR ;
+        qp:points ?rrPoints .
+  ?opp qp:shortName ?opponent .
+  BIND(ABS(?opponentPoints - ?rrPoints) AS ?pointsGap)
+}
+ORDER BY ?pointsGap ?matchNumber

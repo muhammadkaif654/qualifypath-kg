@@ -1,0 +1,21 @@
+# Q05 - CQ4: Which fixtures does RR still have to play, against whom, when and where?
+# Features: multi-hop (team -> fixture -> opponent; fixture -> venue -> city),
+#           FILTER (exclude RR itself), property path (qp:scheduledAt/qp:locatedIn/rdfs:label)
+
+PREFIX qp:   <http://example.org/qualifypath/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX team: <http://example.org/qualifypath/resource/team/>
+
+SELECT ?matchNumber ?date ?opponent ?venue ?city
+WHERE {
+  team:RR qp:participatesIn ?m .
+  ?m a qp:ScheduledMatch ;
+     qp:matchNumber ?matchNumber ;
+     qp:matchDate ?date ;
+     qp:hasParticipant ?opp ;
+     qp:scheduledAt/rdfs:label ?venue ;
+     qp:scheduledAt/qp:locatedIn/rdfs:label ?city .
+  FILTER(?opp != team:RR)
+  ?opp qp:shortName ?opponent .
+}
+ORDER BY ?matchNumber
