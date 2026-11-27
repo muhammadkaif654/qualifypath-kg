@@ -1,0 +1,379 @@
+@prefix qp:   <http://example.org/qualifypath/ontology#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/terms/> .
+
+#################################################################
+#  QualifyPath-KG ontology (T-Box)
+#  AI-3001 Knowledge Representation & Reasoning, Iteration 1
+#  This file holds only the schema. Instance data (A-Box) is
+#  generated from the match data into RDF_Knowledge_Graph/.
+#################################################################
+
+<http://example.org/qualifypath/ontology>
+    a owl:Ontology ;
+    rdfs:label "QualifyPath-KG ontology"@en ;
+    rdfs:comment "Schema for reasoning about cricket tournament standings and qualification: teams, matches, results, innings, and the tournament rules (points, qualifying places, tie-breaks) stored as data."@en ;
+    dc:creator "Muhammad Kaif (24I-0071)", "Talha Habib (24I-0029)", "Haseebullah Gondal (24I-0086)" ;
+    owl:versionInfo "0.1 (Iteration 1)" .
+
+#################################################################
+#  Classes
+#################################################################
+
+qp:Tournament a owl:Class ;
+    rdfs:label "Tournament"@en ;
+    rdfs:comment "A recurring competition, e.g. Indian Premier League or Pakistan Super League."@en .
+
+qp:Season a owl:Class ;
+    rdfs:label "Season"@en ;
+    rdfs:comment "One edition of a tournament (e.g. IPL 2026). Rules are attached per season because they can change between seasons."@en .
+
+qp:Team a owl:Class ;
+    rdfs:label "Team"@en .
+
+qp:Venue a owl:Class ;
+    rdfs:label "Venue"@en ;
+    rdfs:comment "A cricket ground."@en .
+
+qp:City a owl:Class ;
+    rdfs:label "City"@en .
+
+# --- Matches ---------------------------------------------------
+
+qp:Match a owl:Class ;
+    rdfs:label "Match"@en ;
+    rdfs:comment "A league-stage match between exactly two teams."@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty qp:hasParticipant ;
+        owl:qualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+        owl:onClass qp:Team
+    ] .
+
+qp:CompletedMatch a owl:Class ;
+    rdfs:subClassOf qp:Match ;
+    rdfs:label "Completed match"@en ;
+    rdfs:comment "A match played (or abandoned) before the season snapshot cut-off. It counts towards the standings."@en ;
+    owl:disjointWith qp:ScheduledMatch .
+
+qp:DecidedMatch a owl:Class ;
+    rdfs:subClassOf qp:CompletedMatch ;
+    rdfs:label "Decided match"@en ;
+    rdfs:comment "A completed match with a winner (a tie decided by Super Over also has a winner)."@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty qp:hasWinner ;
+        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+        owl:onClass qp:Team
+    ] ;
+    owl:disjointWith qp:NoResultMatch .
+
+qp:NoResultMatch a owl:Class ;
+    rdfs:subClassOf qp:CompletedMatch ;
+    rdfs:label "No-result match"@en ;
+    rdfs:comment "A completed match abandoned without a result. Each team receives the season's no-result points."@en .
+
+qp:ScheduledMatch a owl:Class ;
+    rdfs:subClassOf qp:Match ;
+    rdfs:label "Scheduled match"@en ;
+    rdfs:comment "A fixture after the snapshot cut-off. It has participants, a date and a venue, but no result."@en .
+
+qp:Innings a owl:Class ;
+    rdfs:label "Innings"@en ;
+    rdfs:comment "One team's batting innings within a completed match."@en .
+
+# --- Tournament rules (stored as data) -------------------------
+
+qp:TournamentRule a owl:Class ;
+    rdfs:label "Tournament rule"@en ;
+    rdfs:comment "A rule from a season's official playing conditions, stored as data so the same model works for any tournament."@en .
+
+qp:PointsRule a owl:Class ;
+    rdfs:subClassOf qp:TournamentRule ;
+    rdfs:label "Points rule"@en ;
+    rdfs:comment "Points awarded for a win, a loss and a no result."@en .
+
+qp:QualificationRule a owl:Class ;
+    rdfs:subClassOf qp:TournamentRule ;
+    rdfs:label "Qualification rule"@en ;
+    rdfs:comment "How many teams qualify from the league stage."@en .
+
+qp:TieBreakCriterion a owl:Class ;
+    rdfs:subClassOf qp:TournamentRule ;
+    rdfs:label "Tie-break criterion"@en ;
+    rdfs:comment "One criterion used to separate teams level on points (e.g. net run rate). Criteria are applied in tieBreakRank order."@en .
+
+# --- Standings -------------------------------------------------
+
+qp:StandingEntry a owl:Class ;
+    rdfs:label "Standing entry"@en ;
+    rdfs:comment "One team's record in one season at the snapshot: points, matches, NRR and position. Computed by SPARQL rules R1-R3 and R7."@en .
+
+qp:QualifiedStanding a owl:Class ;
+    rdfs:subClassOf qp:StandingEntry ;
+    rdfs:label "Qualified standing"@en ;
+    rdfs:comment "Assigned by rule R5: too few other teams can still reach this team's points to push it out of the qualifying places."@en ;
+    owl:disjointWith qp:EliminatedStanding, qp:InContentionStanding .
+
+qp:EliminatedStanding a owl:Class ;
+    rdfs:subClassOf qp:StandingEntry ;
+    rdfs:label "Eliminated standing"@en ;
+    rdfs:comment "Assigned by rule R4: at least as many teams as there are qualifying places already have more points than this team can still reach."@en ;
+    owl:disjointWith qp:InContentionStanding .
+
+qp:InContentionStanding a owl:Class ;
+    rdfs:subClassOf qp:StandingEntry ;
+    rdfs:label "In-contention standing"@en ;
+    rdfs:comment "Assigned by rule R6: neither qualified nor eliminated yet."@en .
+
+#################################################################
+#  Object properties
+#################################################################
+
+qp:ofTournament a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "of tournament"@en ;
+    rdfs:domain qp:Season ;
+    rdfs:range qp:Tournament .
+
+qp:inSeason a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "in season"@en ;
+    rdfs:domain qp:Match ;
+    rdfs:range qp:Season .
+
+# --- Participation (O1, O2, O3) --------------------------------
+
+qp:hasParticipant a owl:ObjectProperty ;
+    rdfs:label "has participant"@en ;
+    rdfs:domain qp:Match ;
+    rdfs:range qp:Team .
+
+qp:hasWinner a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "has winner"@en ;
+    rdfs:subPropertyOf qp:hasParticipant ;          # O1
+    rdfs:domain qp:DecidedMatch ;                   # O3
+    rdfs:range qp:Team .
+
+qp:hasLoser a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "has loser"@en ;
+    rdfs:subPropertyOf qp:hasParticipant ;          # O1
+    rdfs:domain qp:DecidedMatch ;
+    rdfs:range qp:Team .
+
+qp:participatesIn a owl:ObjectProperty ;
+    rdfs:label "participates in"@en ;
+    owl:inverseOf qp:hasParticipant ;               # O2
+    rdfs:domain qp:Team ;
+    rdfs:range qp:Match .
+
+# --- Places (O5) -----------------------------------------------
+
+qp:hasVenue a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "has venue"@en ;
+    rdfs:comment "General venue link for any match, played or scheduled."@en ;
+    rdfs:domain qp:Match ;
+    rdfs:range qp:Venue .
+
+qp:playedAt a owl:ObjectProperty ;
+    rdfs:label "played at"@en ;
+    rdfs:comment "Venue of a match that has been played. Only completed matches use it, so the playedAtVenue chain never counts future fixtures."@en ;
+    rdfs:subPropertyOf qp:hasVenue ;
+    rdfs:domain qp:CompletedMatch ;
+    rdfs:range qp:Venue .
+
+qp:scheduledAt a owl:ObjectProperty ;
+    rdfs:label "scheduled at"@en ;
+    rdfs:comment "Venue of a fixture that has not been played yet."@en ;
+    rdfs:subPropertyOf qp:hasVenue ;
+    rdfs:domain qp:ScheduledMatch ;
+    rdfs:range qp:Venue .
+
+qp:locatedIn a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "located in"@en ;
+    rdfs:domain qp:Venue ;
+    rdfs:range qp:City .
+
+qp:homeVenue a owl:ObjectProperty ;
+    rdfs:label "home venue"@en ;
+    rdfs:domain qp:Team ;
+    rdfs:range qp:Venue .
+
+qp:playedAtVenue a owl:ObjectProperty ;
+    rdfs:label "played at venue"@en ;
+    rdfs:comment "Inferred, never loaded: a team played at a venue if it participated in a match played there."@en ;
+    owl:propertyChainAxiom ( qp:participatesIn qp:playedAt ) ;   # O5
+    rdfs:domain qp:Team ;
+    rdfs:range qp:Venue .
+
+# --- Innings ---------------------------------------------------
+
+qp:hasInnings a owl:ObjectProperty ;
+    rdfs:label "has innings"@en ;
+    rdfs:domain qp:CompletedMatch ;
+    rdfs:range qp:Innings .
+
+qp:battingTeam a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "batting team"@en ;
+    rdfs:domain qp:Innings ;
+    rdfs:range qp:Team .
+
+qp:bowlingTeam a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "bowling team"@en ;
+    rdfs:domain qp:Innings ;
+    rdfs:range qp:Team .
+
+# --- Rules attached to a season --------------------------------
+
+qp:hasPointsRule a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "has points rule"@en ;
+    rdfs:domain qp:Season ;
+    rdfs:range qp:PointsRule .
+
+qp:hasQualificationRule a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "has qualification rule"@en ;
+    rdfs:domain qp:Season ;
+    rdfs:range qp:QualificationRule .
+
+qp:hasTieBreak a owl:ObjectProperty ;
+    rdfs:label "has tie-break"@en ;
+    rdfs:domain qp:Season ;
+    rdfs:range qp:TieBreakCriterion .
+
+# --- Standings -------------------------------------------------
+
+qp:standingOf a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "standing of"@en ;
+    rdfs:domain qp:StandingEntry ;
+    rdfs:range qp:Team .
+
+qp:standingIn a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "standing in"@en ;
+    rdfs:domain qp:StandingEntry ;
+    rdfs:range qp:Season .
+
+#################################################################
+#  Datatype properties
+#################################################################
+
+# --- Season ----------------------------------------------------
+qp:seasonYear a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "season year"@en ;
+    rdfs:domain qp:Season ; rdfs:range xsd:integer .
+
+qp:cutoffMatchNumber a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "cut-off match number"@en ;
+    rdfs:comment "Matches numbered up to and including this value are CompletedMatch; later ones are ScheduledMatch."@en ;
+    rdfs:domain qp:Season ; rdfs:range xsd:integer .
+
+# --- Team ------------------------------------------------------
+qp:shortName a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "short name"@en ;
+    rdfs:comment "Official abbreviation, e.g. RCB. The full name is the rdfs:label."@en ;
+    rdfs:domain qp:Team ; rdfs:range xsd:string .
+
+# --- Match -----------------------------------------------------
+qp:matchNumber a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "match number"@en ;
+    rdfs:domain qp:Match ; rdfs:range xsd:integer .
+
+qp:matchDate a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "match date"@en ;
+    rdfs:domain qp:Match ; rdfs:range xsd:date .
+
+qp:oversPerSide a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "overs per side"@en ;
+    rdfs:comment "Only on rain-shortened matches: the reduced overs per innings. Overrides the season's oversQuota in the NRR rule."@en ;
+    rdfs:domain qp:Match ; rdfs:range xsd:integer .
+
+# --- Innings ---------------------------------------------------
+qp:inningsNumber a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "innings number"@en ;
+    rdfs:domain qp:Innings ; rdfs:range xsd:integer .
+
+qp:runs a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "runs"@en ;
+    rdfs:domain qp:Innings ; rdfs:range xsd:integer .
+
+qp:wicketsLost a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "wickets lost"@en ;
+    rdfs:domain qp:Innings ; rdfs:range xsd:integer .
+
+qp:ballsFaced a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "balls faced"@en ;
+    rdfs:comment "Legal balls faced. Stored as balls, not overs: 19.4 overs = 118 balls."@en ;
+    rdfs:domain qp:Innings ; rdfs:range xsd:integer .
+
+qp:allOut a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "all out"@en ;
+    rdfs:comment "True if the batting side was bowled out. For NRR, an all-out innings counts as the full overs quota."@en ;
+    rdfs:domain qp:Innings ; rdfs:range xsd:boolean .
+
+# --- Rules -----------------------------------------------------
+qp:pointsForWin a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "points for win"@en ;
+    rdfs:domain qp:PointsRule ; rdfs:range xsd:integer .
+
+qp:pointsForLoss a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "points for loss"@en ;
+    rdfs:domain qp:PointsRule ; rdfs:range xsd:integer .
+
+qp:pointsForNoResult a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "points for no result"@en ;
+    rdfs:domain qp:PointsRule ; rdfs:range xsd:integer .
+
+qp:oversQuota a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "overs quota"@en ;
+    rdfs:comment "Overs per innings (20 in T20), used when an innings is all out."@en ;
+    rdfs:domain qp:Season ; rdfs:range xsd:integer .
+
+qp:qualifyingPlaces a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "qualifying places"@en ;
+    rdfs:domain qp:QualificationRule ; rdfs:range xsd:integer .
+
+qp:tieBreakRank a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "tie-break rank"@en ;
+    rdfs:comment "1 = applied first when teams are level on points."@en ;
+    rdfs:domain qp:TieBreakCriterion ; rdfs:range xsd:integer .
+
+qp:criterionName a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "criterion name"@en ;
+    rdfs:domain qp:TieBreakCriterion ; rdfs:range xsd:string .
+
+# --- Standing entry (computed by SPARQL rules) -----------------
+qp:played a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "played"@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:integer .
+
+qp:won a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "won"@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:integer .
+
+qp:lost a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "lost"@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:integer .
+
+qp:noResult a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "no result"@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:integer .
+
+qp:points a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "points"@en ;
+    rdfs:comment "Rule R1."@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:integer .
+
+qp:netRunRate a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "net run rate"@en ;
+    rdfs:comment "Rule R2."@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:decimal .
+
+qp:maxReachablePoints a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "max reachable points"@en ;
+    rdfs:comment "Rule R3: points + remaining matches x pointsForWin."@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:integer .
+
+qp:position a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "position"@en ;
+    rdfs:comment "Rule R7: rank by points, then by tie-break criteria in tieBreakRank order."@en ;
+    rdfs:domain qp:StandingEntry ; rdfs:range xsd:integer .
