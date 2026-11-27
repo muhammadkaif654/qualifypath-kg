@@ -1,0 +1,242 @@
+[
+  {
+    "cq": "CQ1",
+    "type": "aggregation",
+    "question": "How many points do Punjab Kings have after match 39 of IPL 2026, and what is their won / lost / no-result record?",
+    "expected": "13 points from 7 matches: 6 won, 0 lost, 1 no result.",
+    "llm_only": "Punjab Kings have **10 points** after match 39, with a **5-4-0 (W-L-NR) record**.\n\n- Wins: 5  \n- Losses: 4  \n- No-result: 0  \n- Points: 10 (2 pts per win)  \n- Matches played: 9 (the league stage schedule has them on 9 games after 39 matches).",
+    "kg_grounded": "Punjab Kings have **13 points** after match 39, with a record of **6 wins, 0 losses and 1 no-result**[F2].  \n\n- Points: 13 (2 pts per win × 6 + 1 pt for the abandoned match)  \n- Played: 7 matches (6 W, 0 L, 1 NR)[F2].",
+    "auto_llm_only": false,
+    "auto_kg_grounded": false,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 9,
+    "facts_cited": [
+      "F2"
+    ],
+    "cited_fact_text": [
+      "[F2] (rule-derived) PBKS: position 1, 13 points, played 7, won 6, lost 0, no result 1, net run rate 1.333, maximum reachable 27 points, status In-contention standing"
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ2",
+    "type": "aggregation + inference",
+    "question": "Which four teams hold the qualifying places in IPL 2026 after match 39, and how are SRH and RR separated?",
+    "expected": "PBKS 13, RCB 12, SRH 10, RR 10. SRH and RR are level on 10 points and on wins (5 each, tie-break 1), so net run rate decides (tie-break 2): SRH 0.815 v RR 0.602.",
+    "llm_only": "**Qualifying teams after match 39:** Mumbai Indians, Chennai Super Kings, Kolkata Knight Riders and Sunrisers Hyderabad.  \n\n**SRH vs RR:** Both sides are tied on points; Sunrisers Hyderabad sit ahead of Rajasthan Royals because of a better Net-Run-Rate (NRR).  \n\n- MI, CSK and KKR are clear leaders with 6-7 points each.  \n- SRH and RR each have 4 points (2 wins, 2 losses).  \n- SRH’s NRR is +0.42, RR’s is +0.18, giving SRH the edge for the fourth spot.",
+    "kg_grounded": "The top-four after match 39 are:\n\n* **Punjab Kings (PBKS) – 13 points**  \n* **Royal Challengers Bangalore (RCB) – 12 points**  \n* **Sunrisers Hyderabad (SRH) – 10 points**  \n* **Rajasthan Royals (RR) – 10 points**  \n\nSRH and RR are level on points (10) and on wins (5 each). According to the IPL tie-break rule, teams equal on points are separated first by most wins and then by net run rate [F1]. SRH’s net run rate (0.815) is higher than RR’s (0.602), so SRH occupies the higher position [F2].  \n\n- PBKS, RCB, SRH, RR are the four qualifying teams [F2].  \n- Both have 10 points and 5 wins; SRH’s superior NRR (0.815 vs 0.602) places it ahead of RR [F1][F2].",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 24,
+    "facts_cited": [
+      "F1",
+      "F2"
+    ],
+    "cited_fact_text": [
+      "[F1] (explicit) IPL 2026 rules: 2 points for a win, 0 for a loss, 1 for a no result; 4 teams qualify from the league stage; teams level on points are separated by (1) most wins, then (2) net run rate; 20 overs per side. The knowledge graph is a snapshot after match 39 (27 April 2026); matches 40-70 are scheduled fixtures without results.",
+      "[F2] (rule-derived) League table after match 39 (computed by rules R1-R7 from the stored match results): PBKS: position 1, 13 points, played 7, won 6, lost 0, no result 1, net run rate 1.333, maximum reachable 27 points, status In-contention standing | RCB: position 2, 12 points, played 8, won 6, lost 2, no result 0, net run rate 1.919, maximum reachable 24 points, status In-contention standing | SRH: position 3, 10 points, played 8, won 5, lost 3, no result 0, net run rate 0.815, maximum reachable 22 points, status In-contention standing | RR: position 4, 10 points, played 8, won 5, lost 3, no result 0, net run rate 0.602, maximum reachable 22 points, status In-contention standing | GT: position 5, 8 points, played 8, won 4, lost 4, no result 0, net run rate -0.475, maximum reachable 20 points, status In-contention standing | CSK: position 6, 6 points, played 8, won 3, lost 5, no result 0, net run rate -0.121, maximum reachable 18 points, status In-contention standing | DC: position 7, 6 points, played 8, won 3, lost 5, no result 0, net run rate -1.06, maximum reachable 18 points, status In-contention standing | KKR: position 8, 5 points, played 8, won 2, lost 5, no result 1, net run rate -0.751, maximum reachable 17 points, status In-contention standing | MI: position 9, 4 points, played 7, won 2, lost 5, no result 0, net run rate -0.736, maximum reachable 18 points, status In-contention standing | LSG: position 10, 4 points, played 8, won 2, lost 6, no result 0, net run rate -1.106, maximum reachable 16 points, status In-contention standing"
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ3",
+    "type": "aggregation, LLM-hard",
+    "question": "What is Kolkata Knight Riders' net run rate after match 39 of IPL 2026?",
+    "expected": "-0.751 (the source points table shows +0.751, a dropped minus sign).",
+    "llm_only": "Kolkata Knight Riders’ net run rate after match 39 of IPL 2026 stands at **+0.212**.\n\n- Matches played: 8  \n- Wins / Losses: 4 / 4 (8 points)  \n- Net Run Rate: **+0.212** (runs scored per over – runs conceded per over)",
+    "kg_grounded": "Kolkata Knight Riders’ net run rate after match 39 is **-0.751**[F2].",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 2,
+    "facts_cited": [
+      "F2"
+    ],
+    "cited_fact_text": [
+      "[F2] (rule-derived) KKR net run rate inputs: 1218 runs scored in 838 balls, 1315 runs conceded in 833 balls; NRR = -0.751 (all-out innings counted as the full quota of overs)."
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ4",
+    "type": "multi-hop",
+    "question": "Which fixtures does Rajasthan Royals still have to play after match 39 of IPL 2026?",
+    "expected": "6 fixtures: PBKS (match 40, Mullanpur), DC (match 43, Jaipur), GT (match 52, Jaipur), DC (match 62, New Delhi), LSG (match 64, Jaipur), MI (match 69, Mumbai).",
+    "llm_only": "Rajasthan Royals have **seven league fixtures remaining** after the completion of match 39.\n\n- **vs Sunrisers Hyderabad** – 30 Apr, Sawai Man Singh Stadium (home)  \n- **vs Kolkata Knight Riders** – 2 May, Eden Gardens (away)  \n- **vs Mumbai Indians** – 5 May, Sawai Man Singh Stadium (home)  \n- **vs Chennai Super Kings** – 8 May, M. A. Chidambaram Stadium (away)  \n- **vs Delhi Capitals** – 11 May, Sawai Man Singh Stadium (home)  \n- **vs Gujarat Titans** – 14 May, Narendra Modi Stadium (away)  \n- **vs Royal Challengers Bangalore** – 17 May, Sawai Man Singh Stadium (home)",
+    "kg_grounded": "Rajasthan Royals have six remaining league fixtures after match 39 [F2]:\n\n- **Match 40** – vs PBKS on 2026-04-28 at Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur  \n- **Match 43** – vs DC on 2026-05-01 at Sawai Mansingh Stadium, Jaipur  \n- **Match 52** – vs GT on 2026-05-09 at Sawai Mansingh Stadium, Jaipur  \n- **Match 62** – vs DC on 2026-05-17 at Arun Jaitley Stadium, New Delhi  \n- **Match 64** – vs LSG on 2026-05-19 at Sawai Mansingh Stadium, Jaipur  \n- **Match 69** – vs MI on 2026-05-24 at Wankhede Stadium, Mumbai.",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 8,
+    "facts_cited": [
+      "F2"
+    ],
+    "cited_fact_text": [
+      "[F2] (reasoning path) Which fixtures does RR still have to play? -> RR has 6 fixtures left: match 40 v PBKS on 2026-04-28 in Mullanpur; match 43 v DC on 2026-05-01 in Jaipur; match 52 v GT on 2026-05-09 in Jaipur; match 62 v DC on 2026-05-17 in New Delhi; match 64 v LSG on 2026-05-19 in Jaipur; match 69 v MI on 2026-05-24 in Mumbai"
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ5",
+    "type": "multi-hop + aggregation",
+    "question": "What is the highest points total Lucknow Super Giants can still reach in IPL 2026 if they win all their remaining matches?",
+    "expected": "16 points: 4 now plus 6 remaining matches x 2.",
+    "llm_only": "**Maximum possible points:** 20 points (if they win all remaining matches).\n\n- Lucknow Super Giants have **6 points** after 7 league games (4 L, 3 W).  \n- Each team plays **14 matches** in the league stage, so they have **7 matches left**.  \n- A win yields **2 points** → 7 wins × 2 = 14 additional points.  \n- 6 current + 14 potential = **20 points** total.",
+    "kg_grounded": "Lucknow Super Giants can reach at most **16 points** if they win all six of their remaining matches (4 current points + 6 × 2 points per win)[F2][F11].  \n\n- Current points: 4[F2]  \n- Remaining matches: 6[F3]  \n- Points per win: 2 (IPL rule)[F1]  \n- Maximum reachable points = 4 + 6 × 2 = 16[F2][F11].",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 26,
+    "facts_cited": [
+      "F2",
+      "F11",
+      "F3",
+      "F1"
+    ],
+    "cited_fact_text": [
+      "[F2] (rule-derived) LSG: position 10, 4 points, played 8, won 2, lost 6, no result 0, net run rate -1.106, maximum reachable 16 points, status In-contention standing",
+      "[F11] (reasoning path) LSG <-standingOf- IPL-2026-LSG: points = 4 (rule R1), maxReachablePoints = 16 (rule R3: 4 + 6 remaining x 2).",
+      "[F3] (reasoning path) Which fixtures does LSG still have to play? -> LSG has 6 fixtures left: match 47 v MI on 2026-05-04 in Mumbai; match 50 v RCB on 2026-05-07 in Lucknow; match 53 v CSK on 2026-05-10 in Chennai; match 59 v CSK on 2026-05-15 in Lucknow; match 64 v RR on 2026-05-19 in Jaipur; match 68 v PBKS on 2026-05-23 in Lucknow",
+      "[F1] (explicit) IPL 2026 rules: 2 points for a win, 0 for a loss, 1 for a no result; 4 teams qualify from the league stage; teams level on points are separated by (1) most wins, then (2) net run rate; 20 overs per side. The knowledge graph is a snapshot after match 39 (27 April 2026); matches 40-70 are scheduled fixtures without results."
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ6",
+    "type": "inference, LLM-hard",
+    "question": "Which teams are mathematically eliminated from the IPL 2026 top 4 after match 39?",
+    "expected": "None. Even last-placed LSG can reach 16 points while the leader has 13, so every team is still in contention.",
+    "llm_only": "**Punjab Kings and Rajasthan Royals are the only sides that can no longer reach the top-4 after match 39.**  \n\n- Both teams have played 12 league games and sit on just **2 points** each.  \n- With only **2 matches left**, the highest total they can achieve is **6 points**.  \n- The fourth-placed side (Sunrisers Hyderabad) already has **12 points**, so the maximum 6 points is well short of the qualification threshold.  \n\nAll other teams still have a mathematical route to finish in the top-4.",
+    "kg_grounded": "No team is mathematically eliminated from the top-4 after match 39.  \n\n- All teams are still “In-contention” according to the qualification status derived from the points and maximum reachable points [F3].  \n- The lowest maximum reachable total (LSG 16 pts) exceeds the current leader’s 13 pts, so none can be ruled out yet [F3].",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 3,
+    "facts_cited": [
+      "F3"
+    ],
+    "cited_fact_text": [
+      "[F3] (rule-derived) Qualification status of every team from rules R4-R6 (points only): In-contention standing: PBKS (13 pts, max 27), RCB (12 pts, max 24), SRH (10 pts, max 22), RR (10 pts, max 22), GT (8 pts, max 20), CSK (6 pts, max 18), DC (6 pts, max 18), KKR (5 pts, max 17), MI (4 pts, max 18), LSG (4 pts, max 16). Eliminated teams: none. Qualified teams: none. The lowest reachable maximum is LSG's 16 points, above the current top score of 13, so no team can be out yet."
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ8",
+    "type": "multi-hop + inference",
+    "question": "Which of Rajasthan Royals' remaining opponents are direct rivals still in contention for the top 4 in IPL 2026?",
+    "expected": "All six remaining opponents are still in contention: GT (8 pts, closest), PBKS (13), DC (6, twice), LSG (4), MI (4).",
+    "llm_only": "**Direct rivals still in the top-4 race that Rajasthan Royals still have to face are Kolkata Knight Riders, Sunrisers Hyderabad and Gujarat Titans.**  \n\n- These three teams are currently occupying the top-4 spots (KKR 12 pts, SRH 10 pts, GT 8 pts).  \n- All three have at least two matches left against RR, so the results will directly affect RR’s chance of staying in the top-4.  \n- Mumbai Indians and Royal Challengers Bangalore are also mathematically alive but sit outside the current top-4, so they are secondary rivals.",
+    "kg_grounded": "Rajasthan Royals’ remaining opponents that are still in contention for a top-4 spot (i.e., direct rivals) are:\n\n- Gujarat Titans (GT) – 8 points, 2-point gap [F11]  \n- Punjab Kings (PBKS) – 13 points, 3-point gap [F11]  \n- Delhi Capitals (DC) – 6 points, 4-point gap (they appear in two of RR’s fixtures) [F11]  \n- Lucknow Super Giants (LSG) – 4 points, 6-point gap [F11]  \n- Mumbai Indians (MI) – 4 points, 6-point gap [F11]",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 17,
+    "facts_cited": [
+      "F11"
+    ],
+    "cited_fact_text": [
+      "[F11] (reasoning path) Which of RR's remaining opponents are direct rivals? -> RR's remaining opponents still in contention, closest on points first: GT (8 pts, gap 2) in match 52; PBKS (13 pts, gap 3) in match 40; DC (6 pts, gap 4) in match 43; DC (6 pts, gap 4) in match 62; LSG (4 pts, gap 6) in match 64; MI (4 pts, gap 6) in match 69"
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ10",
+    "type": "multi-hop scenario, LLM-hard",
+    "question": "If Kolkata Knight Riders lose their last league match of IPL 2026, which teams are certain to finish above them on points?",
+    "expected": "Scenario: KKR's last match is match 70 v DC; KKR could then reach at most 15 points. No team is certain to finish above; all nine others could still finish level or above.",
+    "llm_only": "If KKR lose their final league game, the only teams that are guaranteed to finish ahead of them on points are the four sides that already have 10 or more points.\n\n- Sunrisers Hyderabad – 12 points (6 wins)  \n- Royal Challengers Bangalore – 12 points (6 wins)  \n- Delhi Capitals – 10 points (5 wins)  \n- Mumbai Indians – 10 points (5 wins)  \n\nAll other teams are still within reach of KKR’s current 8 points, depending on net-run-rate or remaining results.",
+    "kg_grounded": "No team is guaranteed to finish ahead of KKR on points if KKR lose their final league match.  \n\n- In that scenario KKR can reach at most 15 points, and no other side has already secured more than 15 points, so none are certain to stay above KKR [F3].",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 17,
+    "facts_cited": [
+      "F3"
+    ],
+    "cited_fact_text": [
+      "[F3] (scenario) If KKR loses its last match, which teams finish above it? -> Scenario: if KKR loses its last match (match 70 v DC), it can reach at most 15 points. Teams certain to finish above: none. Teams that could finish level or above: CSK, DC, GT, LSG, MI, PBKS, RCB, RR, SRH."
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ11",
+    "type": "multi-hop",
+    "question": "Which teams has Rajasthan Royals beaten in IPL 2026 so far, and at which venues?",
+    "expected": "CSK (match 3, Guwahati), GT (match 9, Ahmedabad), MI (match 13, Guwahati), RCB (match 16, Guwahati), LSG (match 32, Lucknow).",
+    "llm_only": "Rajasthan Royals have recorded four victories in the 2026 IPL league stage so far, each against a different opponent and at four distinct venues.\n\n- **Mumbai Indians** – Wankhede Stadium, Mumbai (Match 5)  \n- **Sunrisers Hyderabad** – Rajiv Gandhi International Cricket Stadium, Hyderabad (Match 12)  \n- **Kolkata Knight Riders** – Eden Gardens, Kolkata (Match 18)  \n- **Royal Challengers Bangalore** – M. Chinnaswamy Stadium, Bangalore (Match 27)",
+    "kg_grounded": "Rajasthan Royals have beaten five opponents so far:\n\n- **Chennai Super Kings** – at **Barsapara Cricket Stadium, Guwahati**[F2][F3]  \n- **Gujarat Titans** – at **Narendra Modi Stadium, Ahmedabad**[F2][F4]  \n- **Mumbai Indians** – at **Barsapara Cricket Stadium, Guwahati**[F2][F5]  \n- **Royal Challengers Bangalore** – at **Barsapara Cricket Stadium, Guwahati**[F2][F6]  \n- **Lucknow Super Giants** – at **Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow**[F2][F7]",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 23,
+    "facts_cited": [
+      "F2",
+      "F3",
+      "F4",
+      "F5",
+      "F6",
+      "F7"
+    ],
+    "cited_fact_text": [
+      "[F2] (reasoning path) Which teams has RR beaten, and where? -> RR has beaten 5 team(s): CSK in match 3 (Guwahati); GT in match 9 (Ahmedabad); MI in match 13 (Guwahati); RCB in match 16 (Guwahati); LSG in match 32 (Lucknow)",
+      "[F3] (reasoning path) Path: IPL 2026 match 3: RR v CSK --hasWinner--> RR [explicit] => IPL 2026 match 3: RR v CSK --hasLoser--> CSK [explicit] => IPL 2026 match 3: RR v CSK --playedAt--> Barsapara Cricket Stadium [explicit] => Barsapara Cricket Stadium --locatedIn--> Guwahati [explicit]",
+      "[F4] (reasoning path) Path: IPL 2026 match 9: GT v RR --hasWinner--> RR [explicit] => IPL 2026 match 9: GT v RR --hasLoser--> GT [explicit] => IPL 2026 match 9: GT v RR --playedAt--> Narendra Modi Stadium [explicit] => Narendra Modi Stadium --locatedIn--> Ahmedabad [explicit]",
+      "[F5] (reasoning path) Path: IPL 2026 match 13: RR v MI --hasWinner--> RR [explicit] => IPL 2026 match 13: RR v MI --hasLoser--> MI [explicit] => IPL 2026 match 13: RR v MI --playedAt--> Barsapara Cricket Stadium [explicit] => Barsapara Cricket Stadium --locatedIn--> Guwahati [explicit]",
+      "[F6] (reasoning path) Path: IPL 2026 match 16: RR v RCB --hasWinner--> RR [explicit] => IPL 2026 match 16: RR v RCB --hasLoser--> RCB [explicit] => IPL 2026 match 16: RR v RCB --playedAt--> Barsapara Cricket Stadium [explicit] => Barsapara Cricket Stadium --locatedIn--> Guwahati [explicit]",
+      "[F7] (reasoning path) Path: IPL 2026 match 32: LSG v RR --hasWinner--> RR [explicit] => IPL 2026 match 32: LSG v RR --hasLoser--> LSG [explicit] => IPL 2026 match 32: LSG v RR --playedAt--> Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium [explicit] => Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium --locatedIn--> Lucknow [explicit]"
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  },
+  {
+    "cq": "CQ13",
+    "type": "multi-hop + inference (property chain)",
+    "question": "At which venues has Rajasthan Royals played in IPL 2026 so far?",
+    "expected": "6 venues: Barsapara Cricket Stadium (Guwahati), Ekana Cricket Stadium (Lucknow), Eden Gardens (Kolkata), Narendra Modi Stadium (Ahmedabad), Rajiv Gandhi International Stadium (Hyderabad), Sawai Mansingh Stadium (Jaipur).",
+    "llm_only": "Rajasthan Royals have featured in league-stage matches at seven different venues so far in IPL 2026.\n\n- **Sawai Mansingh Stadium, Jaipur** – their primary home ground.  \n- **Wankhede Stadium, Mumbai** – two away fixtures.  \n- **DY Patil Stadium, Navi Mumbai** – one away fixture.  \n- **M. Chinnaswamy Stadium, Bengaluru** – one away fixture.  \n- **Arun Jaitley Stadium, Delhi** – one away fixture.  \n- **MA Chidambaram Stadium, Chennai** – one away fixture.  \n- **Rajiv Gandhi International Cricket Stadium, Hyderabad** – one away fixture.",
+    "kg_grounded": "Rajasthan Royals have played at six venues so far in IPL 2026:\n\n- Barsapara Cricket Stadium, Guwahati[F2][F4]  \n- Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow[F2][F5]  \n- Eden Gardens, Kolkata[F2][F6]  \n- Narendra Modi Stadium, Ahmedabad[F2][F7]  \n- Rajiv Gandhi International Stadium, Hyderabad[F2][F8]  \n- Sawai Mansingh Stadium, Jaipur[F2][F9]",
+    "auto_llm_only": false,
+    "auto_kg_grounded": true,
+    "evidence_llm_only": false,
+    "evidence_kg_grounded": true,
+    "facts_retrieved": 9,
+    "facts_cited": [
+      "F2",
+      "F4",
+      "F5",
+      "F6",
+      "F7",
+      "F8",
+      "F9"
+    ],
+    "cited_fact_text": [
+      "[F2] (reasoning path) At which venues has RR played? -> RR has played at 6 venue(s): Barsapara Cricket Stadium (Guwahati); Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium (Lucknow); Eden Gardens (Kolkata); Narendra Modi Stadium (Ahmedabad); Rajiv Gandhi International Stadium (Hyderabad); Sawai Mansingh Stadium (Jaipur)",
+      "[F4] (reasoning path) Path: RR --playedAtVenue--> Barsapara Cricket Stadium [inferred (OWL 2 RL)] => RR --participatesIn--> IPL 2026 match 3: RR v CSK [inferred (OWL 2 RL)] => IPL 2026 match 3: RR v CSK --playedAt--> Barsapara Cricket Stadium [explicit] => Barsapara Cricket Stadium --locatedIn--> Guwahati [explicit]",
+      "[F5] (reasoning path) Path: RR --playedAtVenue--> Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium [inferred (OWL 2 RL)] => RR --participatesIn--> IPL 2026 match 32: LSG v RR [inferred (OWL 2 RL)] => IPL 2026 match 32: LSG v RR --playedAt--> Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium [explicit] => Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium --locatedIn--> Lucknow [explicit]",
+      "[F6] (reasoning path) Path: RR --playedAtVenue--> Eden Gardens [inferred (OWL 2 RL)] => RR --participatesIn--> IPL 2026 match 28: KKR v RR [inferred (OWL 2 RL)] => IPL 2026 match 28: KKR v RR --playedAt--> Eden Gardens [explicit] => Eden Gardens --locatedIn--> Kolkata [explicit]",
+      "[F7] (reasoning path) Path: RR --playedAtVenue--> Narendra Modi Stadium [inferred (OWL 2 RL)] => RR --participatesIn--> IPL 2026 match 9: GT v RR [inferred (OWL 2 RL)] => IPL 2026 match 9: GT v RR --playedAt--> Narendra Modi Stadium [explicit] => Narendra Modi Stadium --locatedIn--> Ahmedabad [explicit]",
+      "[F8] (reasoning path) Path: RR --playedAtVenue--> Rajiv Gandhi International Stadium [inferred (OWL 2 RL)] => RR --participatesIn--> IPL 2026 match 21: SRH v RR [inferred (OWL 2 RL)] => IPL 2026 match 21: SRH v RR --playedAt--> Rajiv Gandhi International Stadium [explicit] => Rajiv Gandhi International Stadium --locatedIn--> Hyderabad [explicit]",
+      "[F9] (reasoning path) Path: RR --playedAtVenue--> Sawai Mansingh Stadium [inferred (OWL 2 RL)] => RR --participatesIn--> IPL 2026 match 36: RR v SRH [inferred (OWL 2 RL)] => IPL 2026 match 36: RR v SRH --playedAt--> Sawai Mansingh Stadium [explicit] => Sawai Mansingh Stadium --locatedIn--> Jaipur [explicit]"
+    ],
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0
+  }
+]

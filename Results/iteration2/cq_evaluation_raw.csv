@@ -1,0 +1,119 @@
+cq,type,question,expected,llm_only,kg_grounded,auto_llm_only,auto_kg_grounded,evidence_llm_only,evidence_kg_grounded,facts_retrieved,facts_cited,model,temperature
+CQ1,aggregation,"How many points do Punjab Kings have after match 39 of IPL 2026, and what is their won / lost / no-result record?","13 points from 7 matches: 6 won, 0 lost, 1 no result.","Punjab Kings have **10 points** after match 39, with a **5-4-0 (W-L-NR) record**.
+
+- Wins: 5  
+- Losses: 4  
+- No-result: 0  
+- Points: 10 (2 pts per win)  
+- Matches played: 9 (the league stage schedule has them on 9 games after 39 matches).","Punjab Kings have **13 points** after match 39, with a record of **6 wins, 0 losses and 1 no-result**【F2】.  
+
+- Points: 13 (2 pts per win × 6 + 1 pt for the abandoned match)  
+- Played: 7 matches (6 W, 0 L, 1 NR)【F2】.",False,False,False,True,9,['F2'],openai/gpt-oss-120b,0.0
+CQ2,aggregation + inference,"Which four teams hold the qualifying places in IPL 2026 after match 39, and how are SRH and RR separated?","PBKS 13, RCB 12, SRH 10, RR 10. SRH and RR are level on 10 points and on wins (5 each, tie-break 1), so net run rate decides (tie-break 2): SRH 0.815 v RR 0.602.","**Qualifying teams after match 39:** Mumbai Indians, Chennai Super Kings, Kolkata Knight Riders and Sunrisers Hyderabad.  
+
+**SRH vs RR:** Both sides are tied on points; Sunrisers Hyderabad sit ahead of Rajasthan Royals because of a better Net-Run-Rate (NRR).  
+
+- MI, CSK and KKR are clear leaders with 6-7 points each.  
+- SRH and RR each have 4 points (2 wins, 2 losses).  
+- SRH’s NRR is +0.42, RR’s is +0.18, giving SRH the edge for the fourth spot.","The top-four after match 39 are:
+
+* **Punjab Kings (PBKS) – 13 points**  
+* **Royal Challengers Bangalore (RCB) – 12 points**  
+* **Sunrisers Hyderabad (SRH) – 10 points**  
+* **Rajasthan Royals (RR) – 10 points**  
+
+SRH and RR are level on points (10) and on wins (5 each). According to the IPL tie-break rule, teams equal on points are separated first by most wins and then by net run rate [F1]. SRH’s net run rate (0.815) is higher than RR’s (0.602), so SRH occupies the higher position [F2].  
+
+- PBKS, RCB, SRH, RR are the four qualifying teams [F2].  
+- Both have 10 points and 5 wins; SRH’s superior NRR (0.815 vs 0.602) places it ahead of RR [F1][F2].",False,True,False,True,24,"['F1', 'F2']",openai/gpt-oss-120b,0.0
+CQ3,"aggregation, LLM-hard",What is Kolkata Knight Riders' net run rate after match 39 of IPL 2026?,"-0.751 (the source points table shows +0.751, a dropped minus sign).","Kolkata Knight Riders’ net run rate after match 39 of IPL 2026 stands at **+0.212**.
+
+- Matches played: 8  
+- Wins / Losses: 4 / 4 (8 points)  
+- Net Run Rate: **+0.212** (runs scored per over – runs conceded per over)",Kolkata Knight Riders’ net run rate after match 39 is **-0.751**【F2】.,False,True,False,True,2,['F2'],openai/gpt-oss-120b,0.0
+CQ4,multi-hop,Which fixtures does Rajasthan Royals still have to play after match 39 of IPL 2026?,"6 fixtures: PBKS (match 40, Mullanpur), DC (match 43, Jaipur), GT (match 52, Jaipur), DC (match 62, New Delhi), LSG (match 64, Jaipur), MI (match 69, Mumbai).","Rajasthan Royals have **seven league fixtures remaining** after the completion of match 39.
+
+- **vs Sunrisers Hyderabad** – 30 Apr, Sawai Man Singh Stadium (home)  
+- **vs Kolkata Knight Riders** – 2 May, Eden Gardens (away)  
+- **vs Mumbai Indians** – 5 May, Sawai Man Singh Stadium (home)  
+- **vs Chennai Super Kings** – 8 May, M. A. Chidambaram Stadium (away)  
+- **vs Delhi Capitals** – 11 May, Sawai Man Singh Stadium (home)  
+- **vs Gujarat Titans** – 14 May, Narendra Modi Stadium (away)  
+- **vs Royal Challengers Bangalore** – 17 May, Sawai Man Singh Stadium (home)","Rajasthan Royals have six remaining league fixtures after match 39 [F2]:
+
+- **Match 40** – vs PBKS on 2026-04-28 at Maharaja Yadavindra Singh International Cricket Stadium, Mullanpur  
+- **Match 43** – vs DC on 2026-05-01 at Sawai Mansingh Stadium, Jaipur  
+- **Match 52** – vs GT on 2026-05-09 at Sawai Mansingh Stadium, Jaipur  
+- **Match 62** – vs DC on 2026-05-17 at Arun Jaitley Stadium, New Delhi  
+- **Match 64** – vs LSG on 2026-05-19 at Sawai Mansingh Stadium, Jaipur  
+- **Match 69** – vs MI on 2026-05-24 at Wankhede Stadium, Mumbai.",False,True,False,True,8,['F2'],openai/gpt-oss-120b,0.0
+CQ5,multi-hop + aggregation,What is the highest points total Lucknow Super Giants can still reach in IPL 2026 if they win all their remaining matches?,16 points: 4 now plus 6 remaining matches x 2.,"**Maximum possible points:** 20 points (if they win all remaining matches).
+
+- Lucknow Super Giants have **6 points** after 7 league games (4 L, 3 W).  
+- Each team plays **14 matches** in the league stage, so they have **7 matches left**.  
+- A win yields **2 points** → 7 wins × 2 = 14 additional points.  
+- 6 current + 14 potential = **20 points** total.","Lucknow Super Giants can reach at most **16 points** if they win all six of their remaining matches (4 current points + 6 × 2 points per win)【F2】【F11】.  
+
+- Current points: 4【F2】  
+- Remaining matches: 6【F3】  
+- Points per win: 2 (IPL rule)【F1】  
+- Maximum reachable points = 4 + 6 × 2 = 16【F2】【F11】.",False,True,False,True,26,"['F2', 'F11', 'F3', 'F1']",openai/gpt-oss-120b,0.0
+CQ6,"inference, LLM-hard",Which teams are mathematically eliminated from the IPL 2026 top 4 after match 39?,"None. Even last-placed LSG can reach 16 points while the leader has 13, so every team is still in contention.","**Punjab Kings and Rajasthan Royals are the only sides that can no longer reach the top-4 after match 39.**  
+
+- Both teams have played 12 league games and sit on just **2 points** each.  
+- With only **2 matches left**, the highest total they can achieve is **6 points**.  
+- The fourth-placed side (Sunrisers Hyderabad) already has **12 points**, so the maximum 6 points is well short of the qualification threshold.  
+
+All other teams still have a mathematical route to finish in the top-4.","No team is mathematically eliminated from the top-4 after match 39.  
+
+- All teams are still “In-contention” according to the qualification status derived from the points and maximum reachable points [F3].  
+- The lowest maximum reachable total (LSG 16 pts) exceeds the current leader’s 13 pts, so none can be ruled out yet [F3].",False,True,False,True,3,['F3'],openai/gpt-oss-120b,0.0
+CQ8,multi-hop + inference,Which of Rajasthan Royals' remaining opponents are direct rivals still in contention for the top 4 in IPL 2026?,"All six remaining opponents are still in contention: GT (8 pts, closest), PBKS (13), DC (6, twice), LSG (4), MI (4).","**Direct rivals still in the top-4 race that Rajasthan Royals still have to face are Kolkata Knight Riders, Sunrisers Hyderabad and Gujarat Titans.**  
+
+- These three teams are currently occupying the top-4 spots (KKR 12 pts, SRH 10 pts, GT 8 pts).  
+- All three have at least two matches left against RR, so the results will directly affect RR’s chance of staying in the top-4.  
+- Mumbai Indians and Royal Challengers Bangalore are also mathematically alive but sit outside the current top-4, so they are secondary rivals.","Rajasthan Royals’ remaining opponents that are still in contention for a top-4 spot (i.e., direct rivals) are:
+
+- Gujarat Titans (GT) – 8 points, 2-point gap [F11]  
+- Punjab Kings (PBKS) – 13 points, 3-point gap [F11]  
+- Delhi Capitals (DC) – 6 points, 4-point gap (they appear in two of RR’s fixtures) [F11]  
+- Lucknow Super Giants (LSG) – 4 points, 6-point gap [F11]  
+- Mumbai Indians (MI) – 4 points, 6-point gap [F11]",False,True,False,True,17,['F11'],openai/gpt-oss-120b,0.0
+CQ10,"multi-hop scenario, LLM-hard","If Kolkata Knight Riders lose their last league match of IPL 2026, which teams are certain to finish above them on points?",Scenario: KKR's last match is match 70 v DC; KKR could then reach at most 15 points. No team is certain to finish above; all nine others could still finish level or above.,"If KKR lose their final league game, the only teams that are guaranteed to finish ahead of them on points are the four sides that already have 10 or more points.
+
+- Sunrisers Hyderabad – 12 points (6 wins)  
+- Royal Challengers Bangalore – 12 points (6 wins)  
+- Delhi Capitals – 10 points (5 wins)  
+- Mumbai Indians – 10 points (5 wins)  
+
+All other teams are still within reach of KKR’s current 8 points, depending on net-run-rate or remaining results.","No team is guaranteed to finish ahead of KKR on points if KKR lose their final league match.  
+
+- In that scenario KKR can reach at most 15 points, and no other side has already secured more than 15 points, so none are certain to stay above KKR [F3].",False,True,False,True,17,['F3'],openai/gpt-oss-120b,0.0
+CQ11,multi-hop,"Which teams has Rajasthan Royals beaten in IPL 2026 so far, and at which venues?","CSK (match 3, Guwahati), GT (match 9, Ahmedabad), MI (match 13, Guwahati), RCB (match 16, Guwahati), LSG (match 32, Lucknow).","Rajasthan Royals have recorded four victories in the 2026 IPL league stage so far, each against a different opponent and at four distinct venues.
+
+- **Mumbai Indians** – Wankhede Stadium, Mumbai (Match 5)  
+- **Sunrisers Hyderabad** – Rajiv Gandhi International Cricket Stadium, Hyderabad (Match 12)  
+- **Kolkata Knight Riders** – Eden Gardens, Kolkata (Match 18)  
+- **Royal Challengers Bangalore** – M. Chinnaswamy Stadium, Bangalore (Match 27)","Rajasthan Royals have beaten five opponents so far:
+
+- **Chennai Super Kings** – at **Barsapara Cricket Stadium, Guwahati**【F2】【F3】  
+- **Gujarat Titans** – at **Narendra Modi Stadium, Ahmedabad**【F2】【F4】  
+- **Mumbai Indians** – at **Barsapara Cricket Stadium, Guwahati**【F2】【F5】  
+- **Royal Challengers Bangalore** – at **Barsapara Cricket Stadium, Guwahati**【F2】【F6】  
+- **Lucknow Super Giants** – at **Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow**【F2】【F7】",False,True,False,True,23,"['F2', 'F3', 'F4', 'F5', 'F6', 'F7']",openai/gpt-oss-120b,0.0
+CQ13,multi-hop + inference (property chain),At which venues has Rajasthan Royals played in IPL 2026 so far?,"6 venues: Barsapara Cricket Stadium (Guwahati), Ekana Cricket Stadium (Lucknow), Eden Gardens (Kolkata), Narendra Modi Stadium (Ahmedabad), Rajiv Gandhi International Stadium (Hyderabad), Sawai Mansingh Stadium (Jaipur).","Rajasthan Royals have featured in league-stage matches at seven different venues so far in IPL 2026.
+
+- **Sawai Mansingh Stadium, Jaipur** – their primary home ground.  
+- **Wankhede Stadium, Mumbai** – two away fixtures.  
+- **DY Patil Stadium, Navi Mumbai** – one away fixture.  
+- **M. Chinnaswamy Stadium, Bengaluru** – one away fixture.  
+- **Arun Jaitley Stadium, Delhi** – one away fixture.  
+- **MA Chidambaram Stadium, Chennai** – one away fixture.  
+- **Rajiv Gandhi International Cricket Stadium, Hyderabad** – one away fixture.","Rajasthan Royals have played at six venues so far in IPL 2026:
+
+- Barsapara Cricket Stadium, Guwahati【F2】【F4】  
+- Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow【F2】【F5】  
+- Eden Gardens, Kolkata【F2】【F6】  
+- Narendra Modi Stadium, Ahmedabad【F2】【F7】  
+- Rajiv Gandhi International Stadium, Hyderabad【F2】【F8】  
+- Sawai Mansingh Stadium, Jaipur【F2】【F9】",False,True,False,True,9,"['F2', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9']",openai/gpt-oss-120b,0.0
