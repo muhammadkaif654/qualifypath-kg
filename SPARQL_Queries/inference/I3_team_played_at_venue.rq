@@ -1,0 +1,20 @@
+# I3 - Inference example 3 (constructs O1 + O2 owl:inverseOf + O5 owl:propertyChainAxiom)
+# Explicit facts : match:IPL-2026-M03 qp:hasWinner team:RR ;
+#                                     qp:playedAt venue:barsapara-cricket-stadium .
+# Rules          : qp:hasWinner rdfs:subPropertyOf qp:hasParticipant .            (O1)
+#                  qp:participatesIn owl:inverseOf qp:hasParticipant .            (O2)
+#                  qp:playedAtVenue owl:propertyChainAxiom (qp:participatesIn qp:playedAt) . (O5)
+# Inferred facts : team:RR qp:participatesIn match:IPL-2026-M03 .
+#                  team:RR qp:playedAtVenue venue:barsapara-cricket-stadium .
+# Inference off -> 0 rows. Inference on -> every venue RR has played at.
+
+PREFIX qp:   <http://example.org/qualifypath/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX team: <http://example.org/qualifypath/resource/team/>
+
+SELECT ?venue
+WHERE {
+  team:RR qp:playedAtVenue ?v .
+  ?v rdfs:label ?venue .
+}
+ORDER BY ?venue

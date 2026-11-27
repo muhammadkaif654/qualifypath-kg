@@ -1,0 +1,6 @@
+query,rows_inference_off,values_inference_off,rows_inference_on,values_inference_on
+I1_winner_is_participant,0,,2,RCB; SRH
+I2_match_classified_completed,1,qp:Match,3,qp:CompletedMatch; qp:DecidedMatch; qp:Match
+I3_team_played_at_venue,0,,6,Barsapara Cricket Stadium; Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium; Eden Gardens; Narendra Modi Stadium; Rajiv Gandhi International Stadium; Sawai Mansingh Stadium
+season-wide (explicit),,,,"CompletedMatch=0, DecidedMatch=0, team-venue pairs=0"
+season-wide (inferred),,,,"CompletedMatch=39, DecidedMatch=38, team-venue pairs=50"

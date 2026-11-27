@@ -1,0 +1,17 @@
+# I2 - Inference example 2 (constructs O3 rdfs:domain + O4 rdfs:subClassOf)
+# Explicit facts : match:IPL-2026-M01 a qp:Match ; qp:hasWinner team:RCB .
+# Rules          : qp:hasWinner rdfs:domain qp:DecidedMatch .
+#                  qp:DecidedMatch rdfs:subClassOf qp:CompletedMatch .
+# Inferred facts : match:IPL-2026-M01 a qp:DecidedMatch , qp:CompletedMatch .
+# Season-wide    : 0 completed matches are stored; 39 are inferred (38 decided + 1 no-result).
+# Inference off -> type Match only. Inference on -> Match, CompletedMatch, DecidedMatch.
+
+PREFIX qp:    <http://example.org/qualifypath/ontology#>
+PREFIX match: <http://example.org/qualifypath/resource/match/>
+
+SELECT ?type
+WHERE {
+  match:IPL-2026-M01 a ?type .
+  FILTER(STRSTARTS(STR(?type), STR(qp:)))
+}
+ORDER BY ?type
