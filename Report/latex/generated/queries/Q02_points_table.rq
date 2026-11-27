@@ -1,0 +1,24 @@
+# Q02 - CQ1: Each team's played / won / lost / no-result and points after the cut-off.
+# Features: aggregation (COUNT, SUM, GROUP BY), inference-dependent.
+#   Decided matches are stored only as qp:Match + winner/loser; qp:CompletedMatch and
+#   qp:participatesIn come from the reasoner (O2, O3, O4). With inference off, only the
+#   no-result match 12 is found.
+
+PREFIX qp:     <http://example.org/qualifypath/ontology#>
+PREFIX season: <http://example.org/qualifypath/resource/season/>
+
+SELECT ?team (COUNT(?m) AS ?played) (SUM(?w) AS ?won) (SUM(?l) AS ?lost)
+       (SUM(?nr) AS ?noResult) (SUM(?w * ?pw + ?nr * ?pnr) AS ?points)
+WHERE {
+  season:IPL-2026 qp:hasPointsRule ?rule .
+  ?rule qp:pointsForWin ?pw ; qp:pointsForNoResult ?pnr .
+  ?t qp:shortName ?team ;
+     qp:participatesIn ?m .
+  ?m a qp:CompletedMatch ;
+     qp:inSeason season:IPL-2026 .
+  BIND(IF(EXISTS { ?m qp:hasWinner ?t }, 1, 0) AS ?w)
+  BIND(IF(EXISTS { ?m qp:hasLoser ?t }, 1, 0) AS ?l)
+  BIND(IF(EXISTS { ?m a qp:NoResultMatch }, 1, 0) AS ?nr)
+}
+GROUP BY ?team
+ORDER BY DESC(?points) ?team

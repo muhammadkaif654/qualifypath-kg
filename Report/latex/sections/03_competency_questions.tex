@@ -1,0 +1,68 @@
+\section{Competency questions}
+Fifteen competency questions (CQs) drove the ontology design. Tags: \textbf{MH} multi-hop, \textbf{INF} needs
+inference, \textbf{AGG} aggregation/filtering, \textbf{LLM} hard for an LLM without the graph. Team~X is RR
+(Rajasthan Royals) and Team~Z is KKR (Kolkata Knight Riders).
+
+{\small
+\begin{longtable}{p{1.0cm}p{12.1cm}p{2.0cm}}
+\toprule \textbf{CQ} & \textbf{Question} & \textbf{Tags} \\ \midrule \endfirsthead
+\toprule \textbf{CQ} & \textbf{Question} & \textbf{Tags} \\ \midrule \endhead
+CQ1 & What is each team's points total, and how many matches has it played, won, lost and had with no result? & AGG \\
+CQ2 & Which teams hold the qualifying places once points and the season's tie-break order are applied? & AGG, INF, LLM \\
+CQ3 & What is RR's net run rate (runs per over scored minus runs per over conceded; an all-out innings counts as its full quota)? & AGG, LLM \\
+CQ4 & Which remaining fixtures does RR still have to play, against whom, when and where? & MH \\
+CQ5 & What is the highest points total RR can still reach if it wins all its remaining matches? & MH, AGG \\
+CQ6 & Which teams are mathematically eliminated (their highest reachable total is below the points of at least as many teams as there are qualifying places)? & INF, AGG, LLM \\
+CQ7 & Which teams have already qualified, because too few other teams can still reach their current total? & INF, LLM \\
+CQ8 & Which of RR's remaining opponents are direct rivals still in contention for the same places? & MH, INF \\
+CQ9 & Which remaining matches are between two teams that are both still in contention? & MH, INF \\
+CQ10 & If KKR loses its last match, which teams finish above it on points, and which are level so that the tie-break decides? & MH, AGG, LLM \\
+CQ11 & Which teams has RR beaten this season, and at which venues? & MH, INF \\
+CQ12 & Which matches ended with no result, and how many points did each affected team receive? & INF, AGG \\
+CQ13 & At which venues has RR played this season, and in which cities are they? & MH, INF \\
+CQ14 & Which teams have won at least half of their decided matches at their home venue? & MH, AGG \\
+CQ15 & Which qualification rules apply (points per result, qualifying places, tie-break order)? & LLM \\
+\bottomrule
+\caption{The fifteen competency questions.}\label{tab:cqs}
+\end{longtable}}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lccl}
+\toprule
+\textbf{Category} & \textbf{Required} & \textbf{Have} & \textbf{CQs} \\ \midrule
+Total & 12--15 & 15 & CQ1--CQ15 \\
+Multi-hop & $\geq 4$ & 8 & CQ4, 5, 8, 9, 10, 11, 13, 14 \\
+Inference & $\geq 2$ & 8 & CQ2, 6, 7, 8, 9, 11, 12, 13 \\
+Aggregation / filtering & $\geq 2$ & 8 & CQ1, 2, 3, 5, 6, 10, 12, 14 \\
+Hard for an LLM alone & $\geq 2$ & 6 & CQ2, 3, 6, 7, 10, 15 \\
+\bottomrule
+\end{tabular}
+\caption{Requirement coverage of the competency questions.}
+\end{table}
+
+\subsection{CQ-to-KG mapping}
+Codes O1--O5 are the OWL/RDFS constructs and R1--R7 the SPARQL rules described in Sections~\ref{sec:ontology}
+and~\ref{sec:sparql}.
+
+{\scriptsize
+\begin{longtable}{p{0.8cm}p{3.3cm}p{3.4cm}p{2.4cm}p{4.4cm}}
+\toprule \textbf{CQ} & \textbf{Classes} & \textbf{Properties} & \textbf{Rule / inference} & \textbf{Graph path} \\ \midrule \endfirsthead
+\toprule \textbf{CQ} & \textbf{Classes} & \textbf{Properties} & \textbf{Rule / inference} & \textbf{Graph path} \\ \midrule \endhead
+CQ1 & Team, CompletedMatch, DecidedMatch, NoResultMatch, Season, PointsRule & participatesIn, hasWinner, hasLoser, inSeason, pointsForWin, pointsForNoResult & O3, O4 classify matches; R1 points & Team $\rightarrow$ participatesIn $\rightarrow$ CompletedMatch $\rightarrow$ inSeason $\rightarrow$ Season $\rightarrow$ hasPointsRule \\
+CQ2 & StandingEntry, Season, QualificationRule, TieBreakCriterion & points, won, netRunRate, qualifyingPlaces, hasTieBreak, tieBreakRank & R1, R2, R7 & StandingEntry $\rightarrow$ standingIn $\rightarrow$ Season $\rightarrow$ hasTieBreak (ordered by rank) \\
+CQ3 & Team, Innings, CompletedMatch & battingTeam, bowlingTeam, runs, ballsFaced, allOut, oversPerSide & R2 net run rate & Team $\leftarrow$ battingTeam/bowlingTeam $\leftarrow$ Innings $\leftarrow$ hasInnings $\leftarrow$ Match \\
+CQ4 & Team, ScheduledMatch, Venue, City & participatesIn, hasParticipant, matchDate, scheduledAt, locatedIn & ScheduledMatch disjoint with CompletedMatch & RR $\rightarrow$ participatesIn $\rightarrow$ ScheduledMatch $\rightarrow$ hasParticipant $\rightarrow$ opponent; $\rightarrow$ scheduledAt $\rightarrow$ Venue $\rightarrow$ City \\
+CQ5 & Team, ScheduledMatch, StandingEntry, PointsRule & participatesIn, points, maxReachablePoints & R3 reachable points & Team $\rightarrow$ participatesIn $\rightarrow$ ScheduledMatch (count) + PointsRule \\
+CQ6 & StandingEntry, EliminatedStanding, QualificationRule & points, maxReachablePoints, qualifyingPlaces & R3 $\rightarrow$ R4 & every StandingEntry compared with all others in the season \\
+CQ7 & StandingEntry, QualifiedStanding & points, maxReachablePoints, qualifyingPlaces & R3 $\rightarrow$ R5 & as CQ6 \\
+CQ8 & Team, ScheduledMatch, InContentionStanding & participatesIn, hasParticipant, standingOf & R4, R5 $\rightarrow$ R6 & RR $\rightarrow$ ScheduledMatch $\rightarrow$ opponent $\leftarrow$ standingOf $\leftarrow$ InContentionStanding \\
+CQ9 & ScheduledMatch, InContentionStanding & hasParticipant, standingOf & R6 & ScheduledMatch $\rightarrow$ two teams, each $\leftarrow$ InContentionStanding \\
+CQ10 & Team, ScheduledMatch, StandingEntry, TieBreakCriterion & participatesIn, matchDate, points, maxReachablePoints & what-if scenario over R1--R3 & KKR $\rightarrow$ last ScheduledMatch (max date) $\rightarrow$ opponent credited with the win \\
+CQ11 & Team, DecidedMatch, Venue & hasWinner, hasLoser, playedAt & O1, O2, O3 & RR $\leftarrow$ hasWinner $\leftarrow$ DecidedMatch $\rightarrow$ hasLoser $\rightarrow$ team; $\rightarrow$ playedAt $\rightarrow$ Venue \\
+CQ12 & NoResultMatch, CompletedMatch, PointsRule & hasParticipant, pointsForNoResult & O4; R1 & NoResultMatch $\rightarrow$ hasParticipant $\rightarrow$ Team \\
+CQ13 & Team, Venue, City & playedAtVenue (inferred), locatedIn & O5 property chain & Team $\rightarrow$ playedAtVenue $\rightarrow$ Venue $\rightarrow$ City \\
+CQ14 & Team, Venue, DecidedMatch & homeVenue, playedAt, hasWinner & GROUP BY + HAVING & Team $\rightarrow$ homeVenue $\rightarrow$ Venue $\leftarrow$ playedAt $\leftarrow$ Match \\
+CQ15 & Season, Tournament, PointsRule, QualificationRule, TieBreakCriterion & hasPointsRule, hasQualificationRule, hasTieBreak, tieBreakRank & rules stored as data & Season $\rightarrow$ hasTieBreak, ordered by tieBreakRank \\
+\bottomrule
+\caption{CQ-to-KG mapping.}\label{tab:mapping}
+\end{longtable}}

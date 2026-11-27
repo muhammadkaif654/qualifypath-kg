@@ -1,0 +1,34 @@
+Q: Can LSG still qualify, and what does it need?
+A: LSG has 4 points with 6 matches left (maximum 16). Status: in contention. No number of wins guarantees qualification on points alone.
+Reasoning steps:
+  1. LSG <-standingOf- IPL-2026-LSG: points = 4 (rule R1), maxReachablePoints = 16 (rule R3: 4 + 6 remaining x 2).
+  2. IPL 2026 -hasQualificationRule-> qualifyingPlaces = 4.
+  3. Teams already above LSG's reachable maximum (16): none -> 0 < 4, so not eliminated.
+  4. Teams that can still reach LSG's current 4 points: 9 (>= 4), so not yet qualified.
+  5. Status from rules R4-R6: in contention.
+  6. Wins needed to stay mathematically alive: 3 of 6.
+  7. Wins that guarantee a top-4 finish on points alone, whatever other results: none - also depends on other results or NRR.
+Reasoning paths (1):
+  IPL-2026-LSG --standingOf--> LSG [rule-derived (SPARQL R1-R7)]  =>  IPL-2026-LSG --points--> 4 [rule-derived (SPARQL R1-R7)]  =>  IPL-2026-LSG --maxReachablePoints--> 16 [rule-derived (SPARQL R1-R7)]  =>  IPL-2026-LSG --type--> In-contention standing [rule-derived (SPARQL R1-R7)]
+
+Q: At which venues has RR played?
+A: RR has played at 6 venue(s): Barsapara Cricket Stadium (Guwahati); Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium (Lucknow); Eden Gardens (Kolkata); Narendra Modi Stadium (Ahmedabad); Rajiv Gandhi International Stadium (Hyderabad); Sawai Mansingh Stadium (Jaipur)
+Reasoning steps:
+  1. playedAtVenue is not stored: it is inferred by the property chain participatesIn o playedAt (O5); each path shows the match that supports it.
+Reasoning paths (6):
+  RR --playedAtVenue--> Barsapara Cricket Stadium [inferred (OWL 2 RL)]  =>  RR --participatesIn--> IPL 2026 match 3: RR v CSK [inferred (OWL 2 RL)]  =>  IPL 2026 match 3: RR v CSK --playedAt--> Barsapara Cricket Stadium [explicit]  =>  Barsapara Cricket Stadium --locatedIn--> Guwahati [explicit]
+  RR --playedAtVenue--> Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium [inferred (OWL 2 RL)]  =>  RR --participatesIn--> IPL 2026 match 32: LSG v RR [inferred (OWL 2 RL)]  =>  IPL 2026 match 32: LSG v RR --playedAt--> Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium [explicit]  =>  Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium --locatedIn--> Lucknow [explicit]
+  RR --playedAtVenue--> Eden Gardens [inferred (OWL 2 RL)]  =>  RR --participatesIn--> IPL 2026 match 28: KKR v RR [inferred (OWL 2 RL)]  =>  IPL 2026 match 28: KKR v RR --playedAt--> Eden Gardens [explicit]  =>  Eden Gardens --locatedIn--> Kolkata [explicit]
+  RR --playedAtVenue--> Narendra Modi Stadium [inferred (OWL 2 RL)]  =>  RR --participatesIn--> IPL 2026 match 9: GT v RR [inferred (OWL 2 RL)]  =>  IPL 2026 match 9: GT v RR --playedAt--> Narendra Modi Stadium [explicit]  =>  Narendra Modi Stadium --locatedIn--> Ahmedabad [explicit]
+  RR --playedAtVenue--> Rajiv Gandhi International Stadium [inferred (OWL 2 RL)]  =>  RR --participatesIn--> IPL 2026 match 21: SRH v RR [inferred (OWL 2 RL)]  =>  IPL 2026 match 21: SRH v RR --playedAt--> Rajiv Gandhi International Stadium [explicit]  =>  Rajiv Gandhi International Stadium --locatedIn--> Hyderabad [explicit]
+  RR --playedAtVenue--> Sawai Mansingh Stadium [inferred (OWL 2 RL)]  =>  RR --participatesIn--> IPL 2026 match 36: RR v SRH [inferred (OWL 2 RL)]  =>  IPL 2026 match 36: RR v SRH --playedAt--> Sawai Mansingh Stadium [explicit]  =>  Sawai Mansingh Stadium --locatedIn--> Jaipur [explicit]
+
+Q: Is there a chain of wins from RR to KKR?
+A: 14 chain(s), supported by 14 match path(s): RR > CSK > KKR; RR > CSK > MI > KKR; RR > GT > CSK > KKR; RR > GT > KKR; RR > GT > LSG > KKR; RR > LSG > KKR; RR > LSG > SRH > KKR; RR > MI > GT > KKR; RR > MI > KKR; RR > RCB > CSK > KKR
+Reasoning paths (14):
+  IPL 2026 match 9: GT v RR --hasWinner--> RR [explicit]  =>  IPL 2026 match 9: GT v RR --hasLoser--> GT [explicit]  =>  IPL 2026 match 25: GT v KKR --hasWinner--> GT [explicit]  =>  IPL 2026 match 25: GT v KKR --hasLoser--> KKR [explicit]
+  IPL 2026 match 13: RR v MI --hasWinner--> RR [explicit]  =>  IPL 2026 match 13: RR v MI --hasLoser--> MI [explicit]  =>  IPL 2026 match 2: MI v KKR --hasWinner--> MI [explicit]  =>  IPL 2026 match 2: MI v KKR --hasLoser--> KKR [explicit]
+  IPL 2026 match 32: LSG v RR --hasWinner--> RR [explicit]  =>  IPL 2026 match 32: LSG v RR --hasLoser--> LSG [explicit]  =>  IPL 2026 match 15: KKR v LSG --hasWinner--> LSG [explicit]  =>  IPL 2026 match 15: KKR v LSG --hasLoser--> KKR [explicit]
+  IPL 2026 match 3: RR v CSK --hasWinner--> RR [explicit]  =>  IPL 2026 match 3: RR v CSK --hasLoser--> CSK [explicit]  =>  IPL 2026 match 22: CSK v KKR --hasWinner--> CSK [explicit]  =>  IPL 2026 match 22: CSK v KKR --hasLoser--> KKR [explicit]
+  IPL 2026 match 9: GT v RR --hasWinner--> RR [explicit]  =>  IPL 2026 match 9: GT v RR --hasLoser--> GT [explicit]  =>  IPL 2026 match 37: GT v CSK --hasWinner--> GT [explicit]  =>  IPL 2026 match 37: GT v CSK --hasLoser--> CSK [explicit]  =>  IPL 2026 match 22: CSK v KKR --hasWinner--> CSK [explicit]  =>  IPL 2026 match 22: CSK v KKR --hasLoser--> KKR [explicit]
+  IPL 2026 match 9: GT v RR --hasWinner--> RR [explicit]  =>  IPL 2026 match 9: GT v RR --hasLoser--> GT [explicit]  =>  IPL 2026 match 19: LSG v GT --hasWinner--> GT [explicit]  =>  IPL 2026 match 19: LSG v GT --hasLoser--> LSG [explicit]  =>  IPL 2026 match 15: KKR v LSG --hasWinner--> LSG [explicit]  =>  IPL 2026 match 15: KKR v LSG --hasLoser--> KKR [explicit]

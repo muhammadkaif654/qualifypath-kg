@@ -1,0 +1,88 @@
+\subsection{Inferred knowledge via a property chain (CQ13)}
+\noindent\textbf{Question.} At which venues has Rajasthan Royals played in IPL 2026 so far?\par\smallskip
+\noindent\textcolor{kginferred}{\textbf{Inferred knowledge (OWL 2 RL reasoning / SPARQL rules R1-R7)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F1] RR: position 4, 10 points, played 8, won 5, lost 3, no result 0, net run rate 0.602, maximum reachable 22 points, status In-contention standing
+\end{itemize}
+\noindent\textcolor{kgpath}{\textbf{Multi-hop reasoning paths over explicit + inferred facts}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F2] (cited) At which venues has RR played? -\textgreater{} RR has played at 6 venue(s): Barsapara Cricket Stadium (Guwahati); Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium (Lucknow); Eden Gardens (Kolkata); Narendra Modi Stadium (Ahmedabad); Rajiv Gandhi International Stadium (Hyderabad); Sawai Mansingh Stadium (Jaipur)
+\item{} [F3] playedAtVenue is not stored: it is inferred by the property chain participatesIn o playedAt (O5); each path shows the match that supports it.
+\item{} [F4] (cited) Path: RR --playedAtVenue--\textgreater{} Barsapara Cricket Stadium [inferred (OWL 2 RL)] =\textgreater{} RR --participatesIn--\textgreater{} IPL 2026 match 3: RR v CSK [inferred (OWL 2 RL)] =\textgreater{} IPL 2026 match 3: RR v CSK --playedAt--\textgreater{} Barsapara Cricket Stadium [explicit] =\textgreater{} Barsapara Cricket Stadium --locatedIn--\textgreater{} Guwahati [explicit]
+\item{} [F5] (cited) Path: RR --playedAtVenue--\textgreater{} Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium [inferred (OWL 2 RL)] =\textgreater{} RR --participatesIn--\textgreater{} IPL 2026 match 32: LSG v RR [inferred (OWL 2 RL)] =\textgreater{} IPL 2026 match 32: LSG v RR --playedAt--\textgreater{} Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium [explicit] =\textgreater{} Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium --locatedIn--\textgreater{} Lucknow [explicit]
+\item{} [F6] (cited) Path: RR --playedAtVenue--\textgreater{} Eden Gardens [inferred (OWL 2 RL)] =\textgreater{} RR --participatesIn--\textgreater{} IPL 2026 match 28: KKR v RR [inferred (OWL 2 RL)] =\textgreater{} IPL 2026 match 28: KKR v RR --playedAt--\textgreater{} Eden Gardens [explicit] =\textgreater{} Eden Gardens --locatedIn--\textgreater{} Kolkata [explicit]
+\item{} [F7] (cited) Path: RR --playedAtVenue--\textgreater{} Narendra Modi Stadium [inferred (OWL 2 RL)] =\textgreater{} RR --participatesIn--\textgreater{} IPL 2026 match 9: GT v RR [inferred (OWL 2 RL)] =\textgreater{} IPL 2026 match 9: GT v RR --playedAt--\textgreater{} Narendra Modi Stadium [explicit] =\textgreater{} Narendra Modi Stadium --locatedIn--\textgreater{} Ahmedabad [explicit]
+\item{} [F8] (cited) Path: RR --playedAtVenue--\textgreater{} Rajiv Gandhi International Stadium [inferred (OWL 2 RL)] =\textgreater{} RR --participatesIn--\textgreater{} IPL 2026 match 21: SRH v RR [inferred (OWL 2 RL)] =\textgreater{} IPL 2026 match 21: SRH v RR --playedAt--\textgreater{} Rajiv Gandhi International Stadium [explicit] =\textgreater{} Rajiv Gandhi International Stadium --locatedIn--\textgreater{} Hyderabad [explicit]
+\end{itemize}
+\noindent\textcolor{kggenerated}{\textbf{Generated text (LLM answer)}}
+\begin{quote}\small Rajasthan Royals have played at six venues so far in IPL 2026\textsf{[F2]}: \newline \quad$\bullet$ Barsapara Cricket Stadium -- Guwahati\textsf{[F4]} \newline \quad$\bullet$ Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium -- Lucknow\textsf{[F5]} \newline \quad$\bullet$ Eden Gardens -- Kolkata\textsf{[F6]} \newline \quad$\bullet$ Narendra Modi Stadium -- Ahmedabad\textsf{[F7]} \newline \quad$\bullet$ Rajiv Gandhi International Stadium -- Hyderabad\textsf{[F8]} \newline \quad$\bullet$ Sawai Mansingh Stadium -- Jaipur\textsf{[F9]}\end{quote}
+\noindent\textbf{Supporting evidence cited:} F2, F4, F5, F6, F7, F8, F9\par\medskip
+\subsection{Rule-derived knowledge and multi-hop reasoning (CQ5-CQ7)}
+\noindent\textbf{Question.} Can Lucknow Super Giants still qualify for the top 4, and what do they need?\par\smallskip
+\noindent\textcolor{kgexplicit}{\textbf{Explicit knowledge (stored in the graph)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F1] IPL 2026 rules: 2 points for a win, 0 for a loss, 1 for a no result; 4 teams qualify from the league stage; teams level on points are separated by (1) most wins, then (2) net run rate; 20 overs per side. The knowledge graph is a snapshot after match 39 (27 April 2026); matches 40-70 are scheduled fixtures without results.
+\end{itemize}
+\noindent\textcolor{kginferred}{\textbf{Inferred knowledge (OWL 2 RL reasoning / SPARQL rules R1-R7)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F2] (cited) League table after match 39 (computed by rules R1-R7 from the stored match results): PBKS: position 1, 13 points, played 7, won 6, lost 0, no result 1, net run rate 1.333, maximum reachable 27 points, status In-contention standing | RCB: position 2, 12 points, played 8, won 6, lost 2, no result 0, net run rate 1.919, maximum reachable 24 points, status In-contention standing | SRH: position 3, 10 points, played 8, won 5, lost 3, no result 0, net run rate 0.815, maximum reachable 22 points, status In-contention standing | RR: position 4, 10 points, played 8, won 5, lost 3, no result 0, net run rate 0.602, maximum reachable 22 points, status In-contention standing | GT: position 5, 8 points, played 8, won 4, lost 4, no result 0, net run rate -0.475, maximum reachable 20 points, status In-contention standing | CSK: position 6, 6 points, played 8, won 3, lost 5, no result 0, net run rate -0.121, maximum reachable 18 points, status In-contention standing | DC: position 7, 6 points, played 8, won 3, lost 5, no result 0, net run rate -1.06, maximum reachable 18 points, status In-contention standing | KKR: position 8, 5 points, played 8, won 2, lost 5, no result 1, net run rate -0.751, maximum reachable 17 points, status In-contention standing | MI: position 9, 4 points, played 7, won 2, lost 5, no result 0, net run rate -0.736, maximum reachable 18 points, status In-contention standing | LSG: position 10, 4 points, played 8, won 2, lost 6, no result 0, net run rate -1.106, maximum reachable 16 points, status In-contention standing
+\item{} [F3] LSG: position 10, 4 points, played 8, won 2, lost 6, no result 0, net run rate -1.106, maximum reachable 16 points, status In-contention standing
+\end{itemize}
+\noindent\textcolor{kgpath}{\textbf{Multi-hop reasoning paths over explicit + inferred facts}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F4] (cited) Can LSG still qualify, and what does it need? -\textgreater{} LSG has 4 points with 6 matches left (maximum 16). Status: in contention. No number of wins guarantees qualification on points alone.
+\item{} [F5] (cited) LSG \textless{}-standingOf- IPL-2026-LSG: points = 4 (rule R1), maxReachablePoints = 16 (rule R3: 4 + 6 remaining x 2).
+\item{} [F6] (cited) IPL 2026 -hasQualificationRule-\textgreater{} qualifyingPlaces = 4.
+\item{} [F7] (cited) Teams already above LSG's reachable maximum (16): none -\textgreater{} 0 \textless{} 4, so not eliminated.
+\item{} [F8] Teams that can still reach LSG's current 4 points: 9 (\textgreater{}= 4), so not yet qualified.
+\item{} [F9] Status from rules R4-R6: in contention.
+\item{} [F10] (cited) Wins needed to stay mathematically alive: 3 of 6.
+\end{itemize}
+\noindent\textcolor{kggenerated}{\textbf{Generated text (LLM answer)}}
+\begin{quote}\small Yes -- Lucknow Super Giants (LSG) are still in contention for a top-4 spot. They sit on 4 points with six matches left, giving them a maximum possible total of 16 points \textsf{[F2]}\textsf{[F5]}\textsf{[F4]}. \newline What they need \newline \quad$\bullet$ Win at least 3 of their remaining 6 games to remain mathematically alive \textsf{[F10]}. \newline \quad$\bullet$ Even with those wins, no fixed number of victories guarantees a top-4 finish; they will also need other results to go their way and may have to rely on net-run-rate tiebreakers \textsf{[F11]}. \newline Key points \newline \quad$\bullet$ Current points: 4; max reachable: 16 \textsf{[F5]}. \newline \quad$\bullet$ Four qualification places exist \textsf{[F6]}; no team has already exceeded LSG's reachable ceiling \textsf{[F7]}. \newline \quad$\bullet$ Qualification is not assured by points alone -- it depends on other teams' outcomes and NRR \textsf{[F11]}.\end{quote}
+\noindent\textbf{Supporting evidence cited:} F2, F4, F5, F6, F7, F10, F11\par\medskip
+\subsection{Hypothetical scenario (CQ10)}
+\noindent\textbf{Question.} If Kolkata Knight Riders lose their last league match, which teams are certain to finish above them?\par\smallskip
+\noindent\textcolor{kgexplicit}{\textbf{Explicit knowledge (stored in the graph)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F1] IPL 2026 rules: 2 points for a win, 0 for a loss, 1 for a no result; 4 teams qualify from the league stage; teams level on points are separated by (1) most wins, then (2) net run rate; 20 overs per side. The knowledge graph is a snapshot after match 39 (27 April 2026); matches 40-70 are scheduled fixtures without results.
+\end{itemize}
+\noindent\textcolor{kginferred}{\textbf{Inferred knowledge (OWL 2 RL reasoning / SPARQL rules R1-R7)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F2] KKR: position 8, 5 points, played 8, won 2, lost 5, no result 1, net run rate -0.751, maximum reachable 17 points, status In-contention standing
+\end{itemize}
+\noindent\textcolor{kgpath}{\textbf{Multi-hop reasoning paths over explicit + inferred facts}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F9] Path: KKR --participatesIn--\textgreater{} IPL 2026 match 70: DC v KKR [inferred (OWL 2 RL)] =\textgreater{} IPL 2026 match 70: DC v KKR --hasParticipant--\textgreater{} DC [explicit] =\textgreater{} IPL 2026 match 70: DC v KKR --matchDate--\textgreater{} 2026-05-24 [explicit]
+\end{itemize}
+\noindent\textcolor{kgscenario}{\textbf{Hypothetical scenario (not a fact)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F3] (cited) If KKR loses its last match, which teams finish above it? -\textgreater{} Scenario: if KKR loses its last match (match 70 v DC), it can reach at most 15 points. Teams certain to finish above: none. Teams that could finish level or above: CSK, DC, GT, LSG, MI, PBKS, RCB, RR, SRH.
+\item{} [F4] KKR -participatesIn-\textgreater{} last ScheduledMatch IPL 2026 match 70: DC v KKR (latest matchDate 2026-05-24) -hasParticipant-\textgreater{} DC.
+\item{} [F5] Scenario: KKR loses that match, so DC gets the win.
+\item{} [F6] KKR's best possible total becomes 17 - 2 = 15.
+\item{} [F7] Already above 15 whatever happens: none.
+\item{} [F8] Could still finish level with or above KKR (maximum \textgreater{}= 15): ['CSK', 'DC', 'GT', 'LSG', 'MI', 'PBKS', 'RCB', 'RR', 'SRH']; level teams are separated by the tie-breaks (most wins, then net run rate).
+\end{itemize}
+\noindent\textcolor{kggenerated}{\textbf{Generated text (LLM answer)}}
+\begin{quote}\small No team is guaranteed to finish above Kolkata Knight Riders if they lose their final league match; the outcome of the other teams' remaining games could still place any of them level with or ahead of KKR\textsf{[F3]}.\end{quote}
+\noindent\textbf{Supporting evidence cited:} F3\par\medskip
+\subsection{Insufficient evidence}
+\noindent\textbf{Question.} Who is the top run scorer for Rajasthan Royals in IPL 2026?\par\smallskip
+\noindent\textcolor{kgexplicit}{\textbf{Explicit knowledge (stored in the graph)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F2] Match 3 (2026-03-30, Barsapara Cricket Stadium, Guwahati): RR beat CSK; CSK 127/10 , RR 128/2.
+\item{} [F3] Match 9 (2026-04-04, Narendra Modi Stadium, Ahmedabad): RR beat GT; RR 210/6 , GT 204/8.
+\item{} [F4] Match 13 (2026-04-07, Barsapara Cricket Stadium, Guwahati): RR beat MI; RR 150/3 , MI 123/9 (shortened to 11 overs a side).
+\item{} [F5] Match 16 (2026-04-10, Barsapara Cricket Stadium, Guwahati): RR beat RCB; RCB 201/8 , RR 202/4.
+\item{} [F6] Match 21 (2026-04-13, Rajiv Gandhi International Stadium, Hyderabad): SRH beat RR; SRH 216/6 , RR 159/10.
+\item{} [F7] Match 28 (2026-04-19, Eden Gardens, Kolkata): KKR beat RR; RR 155/9 , KKR 161/6.
+\item{} [F8] Match 32 (2026-04-22, Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow): RR beat LSG; RR 159/6 , LSG 119/10.
+\end{itemize}
+\noindent\textcolor{kginferred}{\textbf{Inferred knowledge (OWL 2 RL reasoning / SPARQL rules R1-R7)}}
+\begin{itemize}\setlength\itemsep{0pt}\footnotesize
+\item{} [F1] RR: position 4, 10 points, played 8, won 5, lost 3, no result 0, net run rate 0.602, maximum reachable 22 points, status In-contention standing
+\end{itemize}
+\noindent\textcolor{kggenerated}{\textbf{Generated text (LLM answer)}}
+\begin{quote}\small INSUFFICIENT EVIDENCE: The provided facts contain match results and team standings but do not include any information about individual player run totals for Rajasthan Royals.\end{quote}
+\noindent\textbf{Supporting evidence cited:} none\par\medskip

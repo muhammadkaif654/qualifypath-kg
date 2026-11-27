@@ -1,0 +1,16 @@
+# Q08 - CQ13: At which venues has RR played this season, and in which cities?
+# Features: inference-dependent. qp:playedAtVenue is never stored: it comes from the property
+#   chain participatesIn o playedAt (O5), which needs the inverse of hasParticipant (O2) and
+#   the sub-properties hasWinner/hasLoser (O1). With inference off: 0 rows.
+
+PREFIX qp:   <http://example.org/qualifypath/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX team: <http://example.org/qualifypath/resource/team/>
+
+SELECT ?venue ?city
+WHERE {
+  team:RR qp:playedAtVenue ?v .
+  ?v rdfs:label ?venue ;
+     qp:locatedIn/rdfs:label ?city .
+}
+ORDER BY ?city

@@ -1,0 +1,51 @@
+\begin{titlepage}
+\centering
+\vspace*{0.6cm}
+{\large \courseName\par}
+\vspace{0.3cm}
+{\normalsize Course Project --- Final Report (Iterations 1 and 2)\par}
+\vspace{1.4cm}
+{\color{indigo}\rule{\linewidth}{1.2pt}\par}
+\vspace{0.4cm}
+{\LARGE\bfseries \projectTitle\par}
+\vspace{0.4cm}
+{\color{indigo}\rule{\linewidth}{1.2pt}\par}
+\vspace{1.2cm}
+
+\begin{tabular}{lll}
+\toprule
+\textbf{Member} & \textbf{Roll number} & \textbf{GitHub username} \\
+\midrule
+Muhammad Kaif & 24I-0071 & \texttt{\ghKaif} \\
+Talha Habib & 24I-0029 & \texttt{\ghTalha} \\
+Haseebullah Gondal & 24I-0086 & \texttt{\ghHaseeb} \\
+\bottomrule
+\end{tabular}
+
+\vspace{1cm}
+\begin{tabular}{rl}
+\textbf{Instructor:} & \instructorName \\
+\textbf{Section:} & \sectionName \\
+\textbf{Domain:} & Cricket tournament qualification (IPL 2026 league stage) \\
+\textbf{Repository:} & \repoLink \\
+\textbf{Submission commit:} & \texttt{\headCommit} \\
+& {\small (\headCommitDate)} \\
+\textbf{Demo video (3--5 min):} & \demoVideo \\
+\textbf{Date:} & \submissionDate \\
+\end{tabular}
+
+\vfill
+\begin{minipage}{0.92\linewidth}\small
+\textbf{Abstract.} QualifyPath-KG answers the questions fans and analysts ask during a tournament ---
+``can my team still qualify, and what does it need?'' --- from a knowledge graph instead of guesswork.
+Iteration~1 turned the IPL~2026 Kaggle dataset into an RDF knowledge graph of \statExplicit{} explicit
+triples (OWL ontology with \statClasses{} classes plus \statAbox{} instance triples), reasoned over it with
+OWL~2~RL and seven SPARQL Update rules, and validated the derived standings against the official points table
+for all ten teams. Iteration~2 adds a multi-hop reasoner (Option~C) that answers 150 out of 150 evaluation
+questions correctly with every intermediate entity shown, and a knowledge-grounded question-answering
+application in which an LLM (\evalModel{} on Groq) answers only from retrieved, provenance-tagged graph facts.
+On ten competency questions the same LLM scored \evalA/10 without the graph and \evalB/10 with it, and every
+grounded answer cited its evidence.
+\end{minipage}
+\vspace{0.4cm}
+\end{titlepage}

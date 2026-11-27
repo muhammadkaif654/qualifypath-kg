@@ -1,0 +1,36 @@
+\section{LLM-only vs.\ KG-grounded evaluation}\label{sec:eval}
+
+\subsection{Setup}
+Ten competency questions were selected to include multi-hop (CQ4, CQ5, CQ8, CQ10, CQ11, CQ13) and
+inference-dependent questions (CQ2, CQ6, CQ8, CQ13). Each was asked in two conditions with the same model
+(\evalModel{} on Groq), temperature~0 and the same token limit: (A) the LLM alone with a short system prompt
+stating the snapshot date, and (B) the LLM with retrieved graph facts (Section~\ref{sec:app}). Expected answers
+were verified against the official IPL points table (CQ1--CQ3) or against ground truth recomputed from the
+cleaned match table. A keyword check gave a first pass; every verdict was then reviewed by hand
+(\texttt{scripts/run\_cq\_evaluation.py}, \texttt{Results/iteration2/cq\_evaluation\_review.csv}).
+
+\input{generated/cq_eval_table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.92\linewidth]{figures/app_evaluation.jpg}
+\caption{Evaluation page of the application.}
+\end{figure}
+
+\subsection{Results}
+\begin{itemize}
+  \item \textbf{Correctness:} LLM only \evalA/10; KG-grounded \evalB/10.
+  \item \textbf{Evidence available:} LLM only 0/10; KG-grounded \evidB/10 --- every grounded answer cites the
+        retrieved facts it used.
+  \item \textbf{Unsupported or hallucinated claims:} all ten LLM-only answers contained invented specifics
+        (points, records, fixtures, venues, NRR values), stated confidently; it never said it did not know. No
+        grounded answer contained a claim outside the retrieved facts.
+  \item \textbf{Where grounding helped most:} questions whose answers exist only in this season's data (CQ1,
+        CQ3, CQ4), and inference-dependent questions, where the LLM-only answer was not just inaccurate but
+        reversed --- for CQ6 it declared the table leaders PBKS eliminated.
+  \item \textbf{Where grounding did not help:} grounding cannot add knowledge the graph lacks. Questions about
+        players (top run scorer) are correctly refused rather than answered. Grounding also leaves phrasing to
+        the LLM: for CQ10 the grounded answer is correct but omits the opponent of KKR's last match, which was
+        in the retrieved facts.
+\end{itemize}
+The LLM-only failures are not a weakness of this particular model: IPL~2026 happened after its training data,
+so without retrieval any LLM can only guess. That is exactly the gap the knowledge graph fills.

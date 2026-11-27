@@ -1,0 +1,30 @@
+# Q09 - CQ12 (and CQ1 in detail): KKR's completed matches, the result, and the points earned
+#   under the season's points rule.
+# Features: UNION (win / loss / no result), OPTIONAL (only shortened matches have oversPerSide)
+
+PREFIX qp:     <http://example.org/qualifypath/ontology#>
+PREFIX team:   <http://example.org/qualifypath/resource/team/>
+PREFIX season: <http://example.org/qualifypath/resource/season/>
+
+SELECT ?matchNumber ?date ?opponent ?result ?points ?shortenedTo
+WHERE {
+  season:IPL-2026 qp:hasPointsRule ?rule .
+  {
+    ?m qp:hasWinner team:KKR ; qp:hasLoser ?opp .
+    ?rule qp:pointsForWin ?points .
+    BIND("Won" AS ?result)
+  } UNION {
+    ?m qp:hasLoser team:KKR ; qp:hasWinner ?opp .
+    ?rule qp:pointsForLoss ?points .
+    BIND("Lost" AS ?result)
+  } UNION {
+    ?m a qp:NoResultMatch ; qp:hasParticipant team:KKR , ?opp .
+    FILTER(?opp != team:KKR)
+    ?rule qp:pointsForNoResult ?points .
+    BIND("No result" AS ?result)
+  }
+  ?m qp:matchNumber ?matchNumber ; qp:matchDate ?date .
+  ?opp qp:shortName ?opponent .
+  OPTIONAL { ?m qp:oversPerSide ?shortenedTo }
+}
+ORDER BY ?matchNumber

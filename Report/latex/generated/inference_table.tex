@@ -1,0 +1,12 @@
+{\footnotesize
+\begin{tabular}{lrrp{8.2cm}}
+\toprule
+\textbf{Query} & \textbf{Off} & \textbf{On} & \textbf{Values with inference} \\
+\midrule
+I1\_winner\_is\_participant & 0 & 2 & RCB; SRH \\
+I2\_match\_classified\_completed & 1 & 3 & qp:CompletedMatch; qp:DecidedMatch; qp:Match \\
+I3\_team\_played\_at\_venue & 0 & 6 & Barsapara Cricket Stadium; Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium; E... \\
+season-wide (explicit) &  &  & CompletedMatch=0, DecidedMatch=0, team-venue pairs=0 \\
+season-wide (inferred) &  &  & CompletedMatch=39, DecidedMatch=38, team-venue pairs=50 \\
+\bottomrule
+\end{tabular}}

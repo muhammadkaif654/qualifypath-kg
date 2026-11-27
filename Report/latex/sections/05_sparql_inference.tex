@@ -1,0 +1,100 @@
+\section{SPARQL queries and symbolic reasoning}\label{sec:sparql}
+
+\subsection{Rules R1--R7 as SPARQL Update}
+Points, NRR and qualification need arithmetic and counting, which OWL cannot express, so they are implemented
+as SPARQL~1.1 Update rules \citep{w3c2013sparqlupdate} that materialise one \texttt{qp:StandingEntry} per team.
+They run after OWL~2~RL reasoning, because they rely on inferred facts such as \texttt{CompletedMatch} and
+\texttt{participatesIn}.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{1.3cm}p{13.6cm}}
+\toprule
+\textbf{Rule} & \textbf{Definition} \\ \midrule
+R1 & points $=$ won $\times$ pointsForWin $+$ lost $\times$ pointsForLoss $+$ noResult $\times$ pointsForNoResult \\
+R2 & NRR $=$ runs scored / overs faced $-$ runs conceded / overs bowled (overs $=$ balls/6; all out $=$ full quota; shortened matches use \texttt{oversPerSide}) \\
+R3 & maxReachablePoints $=$ points $+$ remaining fixtures $\times$ pointsForWin \\
+R4 & EliminatedStanding if at least \emph{qualifyingPlaces} other teams already have more points than this team can reach \\
+R5 & QualifiedStanding if fewer than \emph{qualifyingPlaces} other teams can still reach this team's points \\
+R6 & InContentionStanding otherwise \\
+R7 & position: more points, then more wins (tie-break 1), then higher NRR (tie-break 2) \\
+\bottomrule
+\end{tabular}
+\caption{SPARQL Update rules (\texttt{SPARQL\_Queries/rules/}). R4 and R5 use points only, so they never
+wrongly declare a team qualified or eliminated, but may keep a team ``in contention'' longer than the official
+table.}
+\end{table}
+
+\lstinputlisting[language=SPARQL,caption={Rule R7 (position with the IPL tie-break order).}]{generated/queries/R7_position.ru}
+
+The derived league table (\tabref{tab:standings}) is identical to the official IPL table after match~39.
+
+\begin{table}[H]\centering
+\input{generated/standings_table}
+\caption{League positions derived by rules R1--R7 (query Q04).}\label{tab:standings}
+\end{table}
+
+\subsection{The eleven SPARQL queries}
+\begin{table}[H]\centering\small
+\begin{tabular}{p{4.2cm}p{10.6cm}}
+\toprule
+\textbf{Required feature} & \textbf{Queries} \\ \midrule
+Basic graph pattern & Q01 \\
+FILTER & Q05, Q06, Q09, Q11 \\
+OPTIONAL / UNION & Q03 (OPTIONAL), Q09 (UNION and OPTIONAL) \\
+Aggregation & Q02, Q03, Q10 (with HAVING) \\
+Multi-hop traversal & Q05, Q07, Q11 \\
+Property paths & Q01, Q04, Q05, Q07 (inverse path \texttt{\^{}qp:hasWinner}) \\
+Inference-dependent & Q02, Q08 (and rule-derived classes in Q04, Q06, Q11) \\
+\bottomrule
+\end{tabular}
+\caption{SPARQL feature coverage.}
+\end{table}
+
+Every query below was run on the graph after OWL~2~RL reasoning and the rules; the same results are returned by
+GraphDB (\figref{fig:graphdb_sparql_Q05.jpg}, \figref{fig:graphdb_sparql_Q04.jpg}).
+
+\input{generated/sparql_queries}
+
+\shot[0.95\linewidth]{graphdb_sparql_Q05.jpg}{Multi-hop query Q05 executed in GraphDB: RR's six remaining
+fixtures with opponents, dates, venues and cities.}
+\shot[0.95\linewidth]{graphdb_sparql_Q04.jpg}{Q04 in GraphDB: positions 1--10 match the official table.}
+
+\subsection{Symbolic inference examples}
+Each example follows the pattern \emph{explicit facts $\rightarrow$ rule or schema knowledge $\rightarrow$
+inferred fact}, and is demonstrated by running the same query with inference switched off and on.
+
+\paragraph{Example 1 --- the winner of a match took part in it (O1).}
+Explicit: \texttt{match:IPL-2026-M01 qp:hasWinner team:RCB ; qp:hasLoser team:SRH}.
+Rule: \texttt{hasWinner} and \texttt{hasLoser} are sub-properties of \texttt{hasParticipant}.
+Inferred: \texttt{match:IPL-2026-M01 qp:hasParticipant team:RCB, team:SRH}. All 76 participation links of
+decided matches are inferred this way.
+
+\paragraph{Example 2 --- a match with a winner is a completed match (O3, O4).}
+Explicit: \texttt{match:IPL-2026-M01 a qp:Match ; qp:hasWinner team:RCB}.
+Rules: the domain of \texttt{hasWinner} is \texttt{DecidedMatch}, and \texttt{DecidedMatch} is a subclass of
+\texttt{CompletedMatch}. Inferred: match~1 is a \texttt{DecidedMatch} and a \texttt{CompletedMatch}.
+Season-wide, 0 completed matches are stored and 39 are inferred; the points table (Q02) depends on this.
+
+\paragraph{Example 3 --- the venues a team has played at (O1, O2, O5).}
+Explicit: \texttt{match:IPL-2026-M03 qp:hasWinner team:RR ; qp:playedAt venue:barsapara-cricket-stadium}.
+Rules: sub-property (O1), inverse (O2) and the chain \texttt{playedAtVenue $\equiv$ participatesIn $\circ$ playedAt} (O5).
+Inferred: \texttt{team:RR qp:participatesIn match:IPL-2026-M03} and
+\texttt{team:RR qp:playedAtVenue venue:barsapara-cricket-stadium}. Season-wide, 0 team--venue links are stored
+and 50 are inferred.
+
+\begin{table}[H]\centering
+\input{generated/inference_table}
+\caption{Inference demonstrations I1--I3: rows returned with inference off and on.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.49\linewidth]{figures/graphdb_inference_I3_off.jpg}\hfill
+\includegraphics[width=0.49\linewidth]{figures/graphdb_inference_I3_on.jpg}
+\caption{I3 in GraphDB with \emph{Include inferred data} off (left, no results) and on (right, six venues).}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.49\linewidth]{figures/graphdb_inference_I2_off.jpg}\hfill
+\includegraphics[width=0.49\linewidth]{figures/graphdb_inference_I2_on.jpg}
+\caption{I2 in GraphDB: match~1 is only a \texttt{qp:Match} when inference is off, and also a
+\texttt{CompletedMatch} and \texttt{DecidedMatch} when it is on.}
+\end{figure}

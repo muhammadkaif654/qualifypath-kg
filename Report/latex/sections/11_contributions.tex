@@ -1,0 +1,37 @@
+\section{Team contributions}
+Each member owns one major rubric component plus supporting work and can explain every part of the system.
+The complete commit history is listed in Appendix~\ref{app:commits}; commit count alone is not a measure of
+contribution.
+
+{\small
+\begin{longtable}{p{2.4cm}p{2.4cm}p{6.4cm}p{3.4cm}}
+\toprule \textbf{Member} & \textbf{GitHub} & \textbf{Tasks (Iterations 1 and 2)} & \textbf{Representative commits} \\ \midrule \endfirsthead
+\toprule \textbf{Member} & \textbf{GitHub} & \textbf{Tasks} & \textbf{Commits} \\ \midrule \endhead
+Muhammad Kaif \newline 24I-0071 & \texttt{\ghKaif} &
+SPARQL queries Q01--Q11 and runner; GraphDB repository, loading and visualisation; KG loading package with
+provenance tracking; retriever, LLM client and grounded QA pipeline; Streamlit application (Ask page, explorer,
+shared UI); report and submission. &
+\href{https://github.com/muhammadkaif654/qualithpath-kg/commit/9f2449a}{\texttt{9f2449a}} queries \newline
+\href{https://github.com/muhammadkaif654/qualithpath-kg/commit/6ba333a}{\texttt{6ba333a}} KG package \newline
+\href{https://github.com/muhammadkaif654/qualithpath-kg/commit/04026e6}{\texttt{04026e6}} QA pipeline \newline
+\href{https://github.com/muhammadkaif654/qualithpath-kg/commit/fc4a6c8}{\texttt{fc4a6c8}} app \\ \midrule
+Talha Habib \newline 24I-0029 & \texttt{\ghTalha} &
+Data cleaning and RDF conversion (\texttt{build\_kg.py}, A-Box, validation against the official table); Prot\'eg\'e
+demonstration; symbolic inference examples I1--I3; multi-hop reasoner (Option~C) and its evaluation;
+reasoner page of the app. & \commitsTalha \\ \midrule
+Haseebullah Gondal \newline 24I-0086 & \texttt{\ghHaseeb} &
+Competency questions and CQ-to-KG mapping; ontology design (classes, properties, OWL constructs); SPARQL rules
+R1--R7; LLM prompts; LLM-only vs.\ KG-grounded evaluation and explainability examples; evaluation page of the app. &
+\commitsHaseeb \\
+\bottomrule
+\end{longtable}}
+
+\subsection*{Use of AI tools and external resources}
+As required by the course policy, we acknowledge that an AI assistant (Claude, Anthropic) was used as a learning
+and productivity aid while drafting code, queries, prompts and documentation. All outputs were run, checked and
+validated by the team (including against the official IPL points table and independent ground truth), and each
+member can explain and modify their part. External resources: the Kaggle dataset \citep{kaggleipl2026}; rdflib
+\citep{rdflibdocs}, owlrl \citep{owlrldocs}, GraphDB \citep{graphdbdocs}, Streamlit \citep{streamlitdocs} and the
+Groq API \citep{groqdocs}; W3C standards \citep{w3c2012owl2profiles,w3c2013sparqlupdate}; and the research cited in
+Sections~\ref{sec:multihop} and~\ref{sec:app}. No API keys are included in the repository; a sample
+configuration (\texttt{.env.example}) is provided.

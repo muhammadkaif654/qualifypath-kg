@@ -1,0 +1,68 @@
+\section{Modern KG reasoning: multi-hop reasoning (Option C)}\label{sec:multihop}
+
+\subsection{Background and research}
+Multi-hop reasoning answers a question by following several connected relationships, so the answer is the end
+of a \emph{path} and the path itself is the explanation. Lao et al.\ \citep{lao2011pra} showed that sequences of
+relations (relation paths) are informative features for inference in large knowledge bases; MINERVA
+\citep{das2018minerva} learned to walk from a query entity to the answer, returning the walk as evidence; and
+Think-on-Graph \citep{sun2024tog} lets an LLM explore graph paths step by step so that answers stay
+traceable. Hogan et al.\ \citep{hogan2021knowledge} place these methods alongside deductive (rule-based)
+reasoning and stress that graph paths make conclusions explainable.
+
+\textbf{What we took from the literature.} From path-ranking work we took the idea that each question type is
+a \emph{relation-path pattern} (for example \texttt{participatesIn} $\rightarrow$ \texttt{hasParticipant}
+$\rightarrow$ \texttt{standingOf}$^{-1}$). From MINERVA and Think-on-Graph we took the principle that the
+returned path, with every intermediate entity, is part of the answer. We did not train a learned walker:
+our graph is small (about four thousand triples) and the answers must be exactly right, so deterministic graph
+traversal over relation patterns is both sufficient and verifiable, while learned walkers are designed for
+large, incomplete graphs.
+
+\subsection{Method}
+The reasoner (\texttt{qualifypath/multihop.py}) works on the graph after OWL~2~RL reasoning and rules R1--R7.
+\begin{enumerate}
+  \item \textbf{Generic path search} --- breadth-first search over entity-to-entity relations
+        (\texttt{participatesIn}, \texttt{hasWinner}, \texttt{hasLoser}, \texttt{playedAt},
+        \texttt{scheduledAt}, \texttt{locatedIn}, \texttt{homeVenue}), walking each relation forwards or
+        backwards and returning all shortest connecting paths (e.g.\ RR to Wankhede Stadium).
+  \item \textbf{Question-specific chains} for CQ4 (remaining fixtures), CQ5--CQ7 (qualification analysis,
+        including wins needed to stay alive and to guarantee a place), CQ8 (direct rivals), CQ10 (what-if),
+        CQ11 (teams beaten and where), CQ13 (venues via the inferred chain) and transitive win chains
+        (A beat B, B beat C).
+  \item \textbf{Provenance on every hop} --- each hop is checked against the three graph layers and labelled
+        \emph{explicit} (stored), \emph{inferred} (OWL~2~RL) or \emph{rule-derived} (R1--R7).
+\end{enumerate}
+
+\textbf{Predicted vs.\ verified facts.} Option~C makes no statistical predictions: every hop is a stored or
+logically inferred fact. The only hypothetical output is the CQ10 what-if analysis, which is always labelled as
+a \emph{scenario} and never presented as a fact.
+
+\textbf{Why it suits the domain.} Qualification questions are inherently multi-hop: a team's chances depend on
+its remaining matches, their opponents and those opponents' standings. Showing the full path is exactly the
+explanation a fan or analyst needs.
+
+\subsection{Representative inputs and outputs}
+\lstinputlisting[basicstyle=\ttfamily\tiny,caption={Reasoner output: question, answer, reasoning steps and
+labelled paths (excerpt of \texttt{Results/iteration2/multihop\_examples.txt}).}]{generated/multihop_examples.txt}
+
+\shot[0.9\linewidth]{app_reasoner_lsg.jpg}{Multi-hop reasoner page: qualification analysis for LSG, with
+reasoning steps, labelled paths and the path graph.}
+\shot[0.9\linewidth]{app_reasoner_rr_venues.jpg}{Venues RR has played at: each answer is the inferred
+\texttt{playedAtVenue} link plus the match that supports it.}
+
+\subsection{Evaluation}
+Ground truth was recomputed with plain Python from the cleaned match table, without RDF, SPARQL or the
+reasoner, so the two implementations share no code. Every team was queried for each reasoning type and every
+ordered pair of teams for win chains (150 questions). We also checked that every hop of every returned path
+exists in the graph.
+
+\begin{table}[H]\centering
+\input{generated/multihop_table}
+\caption{Multi-hop reasoning accuracy against independent ground truth.}
+\end{table}
+\input{generated/multihop_bullets}
+
+All 150 answers match, and no path contains a hop that is absent from the graph. In a first run, 27 win-chain
+answers listed the same team chain twice because SRH beat RR in two different matches; we now report unique team
+chains while keeping both supporting match paths. Because the ground truth uses the same cleaned data, this
+evaluation verifies the reasoning, not the data; the data itself was validated against the official points table
+(Section~2).

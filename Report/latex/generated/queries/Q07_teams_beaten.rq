@@ -1,0 +1,17 @@
+# Q07 - CQ11: Which teams has RR beaten, and at which venues and cities?
+# Features: multi-hop, property paths (inverse ^qp:hasWinner; sequences qp:playedAt/qp:locatedIn/rdfs:label)
+
+PREFIX qp:   <http://example.org/qualifypath/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX team: <http://example.org/qualifypath/resource/team/>
+
+SELECT ?matchNumber ?date ?beaten ?venue ?city
+WHERE {
+  team:RR ^qp:hasWinner ?m .
+  ?m qp:hasLoser/qp:shortName ?beaten ;
+     qp:matchNumber ?matchNumber ;
+     qp:matchDate ?date ;
+     qp:playedAt/rdfs:label ?venue ;
+     qp:playedAt/qp:locatedIn/rdfs:label ?city .
+}
+ORDER BY ?matchNumber

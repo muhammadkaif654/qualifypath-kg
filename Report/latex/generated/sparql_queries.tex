@@ -1,0 +1,196 @@
+\subsubsection*{Q01 --- season rules (CQ15; basic graph pattern, property path)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q01_season_rules.rq}
+\noindent\textit{Output (2 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{llllllll}
+\toprule
+\textbf{season} & \textbf{pointsForWin} & \textbf{pointsForLoss} & \textbf{pointsForNoResult} & \textbf{oversQuota} & \textbf{qualifyingPlaces} & \textbf{tieBreakRank} & \textbf{tieBreak} \\
+\midrule
+IPL 2026 & 2 & 0 & 1 & 20 & 4 & 1 & Most wins \\
+IPL 2026 & 2 & 0 & 1 & 20 & 4 & 2 & Net run rate \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q02 --- points table (CQ1; aggregation, inference-dependent)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q02_points_table.rq}
+\noindent\textit{Output (10 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{llllll}
+\toprule
+\textbf{team} & \textbf{played} & \textbf{won} & \textbf{lost} & \textbf{noResult} & \textbf{points} \\
+\midrule
+PBKS & 7 & 6 & 0 & 1 & 13 \\
+RCB & 8 & 6 & 2 & 0 & 12 \\
+RR & 8 & 5 & 3 & 0 & 10 \\
+SRH & 8 & 5 & 3 & 0 & 10 \\
+GT & 8 & 4 & 4 & 0 & 8 \\
+CSK & 8 & 3 & 5 & 0 & 6 \\
+DC & 8 & 3 & 5 & 0 & 6 \\
+KKR & 8 & 2 & 5 & 1 & 5 \\
+\multicolumn{6}{l}{\textit{\ldots{} 2 more rows}} \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q03 --- net run rate (CQ3; aggregation, OPTIONAL, VALUES)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q03_net_run_rate.rq}
+\noindent\textit{Output (10 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{llllll}
+\toprule
+\textbf{team} & \textbf{runsFor} & \textbf{ballsFaced} & \textbf{runsAgainst} & \textbf{ballsBowled} & \textbf{netRunRate} \\
+\midrule
+RCB & 1501 & 817 & 1437 & 947 & 1.919 \\
+PBKS & 1315 & 672 & 1249 & 720 & 1.333 \\
+SRH & 1683 & 951 & 1513 & 926 & 0.815 \\
+RR & 1391 & 847 & 1380 & 895 & 0.602 \\
+CSK & 1496 & 960 & 1397 & 885 & -0.121 \\
+GT & 1389 & 930 & 1491 & 948 & -0.475 \\
+MI & 1229 & 781 & 1279 & 754 & -0.736 \\
+KKR & 1218 & 838 & 1315 & 833 & -0.751 \\
+\multicolumn{6}{l}{\textit{\ldots{} 2 more rows}} \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q04 --- qualifying places (CQ2; property path, rule results)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q04_qualifying_places.rq}
+\noindent\textit{Output (10 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{lllll}
+\toprule
+\textbf{position} & \textbf{team} & \textbf{points} & \textbf{netRunRate} & \textbf{inQualifyingPlace} \\
+\midrule
+1 & PBKS & 13 & 1.333 & True \\
+2 & RCB & 12 & 1.919 & True \\
+3 & SRH & 10 & 0.815 & True \\
+4 & RR & 10 & 0.602 & True \\
+5 & GT & 8 & -0.475 & False \\
+6 & CSK & 6 & -0.121 & False \\
+7 & DC & 6 & -1.06 & False \\
+8 & KKR & 5 & -0.751 & False \\
+\multicolumn{5}{l}{\textit{\ldots{} 2 more rows}} \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q05 --- remaining fixtures (CQ4; multi-hop, FILTER, property path)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q05_remaining_fixtures.rq}
+\noindent\textit{Output (6 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{lllll}
+\toprule
+\textbf{matchNumber} & \textbf{date} & \textbf{opponent} & \textbf{venue} & \textbf{city} \\
+\midrule
+40 & 2026-04-28 & PBKS & Maharaja Yadavindra Singh International Cricket Stadium & Mullanpur \\
+43 & 2026-05-01 & DC & Sawai Mansingh Stadium & Jaipur \\
+52 & 2026-05-09 & GT & Sawai Mansingh Stadium & Jaipur \\
+62 & 2026-05-17 & DC & Arun Jaitley Stadium & New Delhi \\
+64 & 2026-05-19 & LSG & Sawai Mansingh Stadium & Jaipur \\
+69 & 2026-05-24 & MI & Wankhede Stadium & Mumbai \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q06 --- qualification status (CQ5--CQ7; rule-inferred classes, FILTER)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q06_qualification_status.rq}
+\noindent\textit{Output (10 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{lllll}
+\toprule
+\textbf{team} & \textbf{points} & \textbf{remainingFixtures} & \textbf{maxReachablePoints} & \textbf{status} \\
+\midrule
+PBKS & 13 & 7 & 27 & In-contention standing \\
+RCB & 12 & 6 & 24 & In-contention standing \\
+SRH & 10 & 6 & 22 & In-contention standing \\
+RR & 10 & 6 & 22 & In-contention standing \\
+GT & 8 & 6 & 20 & In-contention standing \\
+CSK & 6 & 6 & 18 & In-contention standing \\
+DC & 6 & 6 & 18 & In-contention standing \\
+KKR & 5 & 6 & 17 & In-contention standing \\
+\multicolumn{5}{l}{\textit{\ldots{} 2 more rows}} \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q07 --- teams beaten (CQ11; multi-hop, inverse property path)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q07_teams_beaten.rq}
+\noindent\textit{Output (5 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{lllll}
+\toprule
+\textbf{matchNumber} & \textbf{date} & \textbf{beaten} & \textbf{venue} & \textbf{city} \\
+\midrule
+3 & 2026-03-30 & CSK & Barsapara Cricket Stadium & Guwahati \\
+9 & 2026-04-04 & GT & Narendra Modi Stadium & Ahmedabad \\
+13 & 2026-04-07 & MI & Barsapara Cricket Stadium & Guwahati \\
+16 & 2026-04-10 & RCB & Barsapara Cricket Stadium & Guwahati \\
+32 & 2026-04-22 & LSG & Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium & Lucknow \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q08 --- venues played (CQ13; inference-dependent (property chain))}
+\lstinputlisting[language=SPARQL]{generated/queries/Q08_venues_played.rq}
+\noindent\textit{Output (6 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{ll}
+\toprule
+\textbf{venue} & \textbf{city} \\
+\midrule
+Narendra Modi Stadium & Ahmedabad \\
+Barsapara Cricket Stadium & Guwahati \\
+Rajiv Gandhi International Stadium & Hyderabad \\
+Sawai Mansingh Stadium & Jaipur \\
+Eden Gardens & Kolkata \\
+Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium & Lucknow \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q09 --- team results (CQ12; UNION, OPTIONAL, FILTER)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q09_team_results.rq}
+\noindent\textit{Output (8 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{llllll}
+\toprule
+\textbf{matchNumber} & \textbf{date} & \textbf{opponent} & \textbf{result} & \textbf{points} & \textbf{shortenedTo} \\
+\midrule
+2 & 2026-03-29 & MI & Lost & 0 &  \\
+6 & 2026-04-02 & SRH & Lost & 0 &  \\
+12 & 2026-04-06 & PBKS & No result & 1 &  \\
+15 & 2026-04-09 & LSG & Lost & 0 &  \\
+22 & 2026-04-14 & CSK & Lost & 0 &  \\
+25 & 2026-04-17 & GT & Lost & 0 &  \\
+28 & 2026-04-19 & RR & Won & 2 &  \\
+38 & 2026-04-26 & LSG & Won & 2 &  \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q10 --- home win ratio (CQ14; aggregation with HAVING)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q10_home_win_ratio.rq}
+\noindent\textit{Output (6 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{llll}
+\toprule
+\textbf{team} & \textbf{homeMatches} & \textbf{homeWins} & \textbf{winPercent} \\
+\midrule
+PBKS & 3 & 3 & 100 \\
+RCB & 5 & 4 & 80 \\
+RR & 4 & 3 & 75 \\
+SRH & 4 & 3 & 75 \\
+CSK & 3 & 2 & 67 \\
+GT & 4 & 2 & 50 \\
+\bottomrule
+\end{tabular}}}
+\medskip
+\subsubsection*{Q11 --- rival fixtures (CQ8--CQ9; multi-hop, rule-inferred class)}
+\lstinputlisting[language=SPARQL]{generated/queries/Q11_rival_fixtures.rq}
+\noindent\textit{Output (6 rows):}\par\smallskip
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{{\footnotesize
+\begin{tabular}{lllllll}
+\toprule
+\textbf{matchNumber} & \textbf{date} & \textbf{opponent} & \textbf{opponentPosition} & \textbf{opponentPoints} & \textbf{rrPoints} & \textbf{pointsGap} \\
+\midrule
+52 & 2026-05-09 & GT & 5 & 8 & 10 & 2 \\
+40 & 2026-04-28 & PBKS & 1 & 13 & 10 & 3 \\
+43 & 2026-05-01 & DC & 7 & 6 & 10 & 4 \\
+62 & 2026-05-17 & DC & 7 & 6 & 10 & 4 \\
+64 & 2026-05-19 & LSG & 10 & 4 & 10 & 6 \\
+69 & 2026-05-24 & MI & 9 & 4 & 10 & 6 \\
+\bottomrule
+\end{tabular}}}
+\medskip

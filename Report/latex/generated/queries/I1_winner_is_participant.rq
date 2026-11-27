@@ -1,0 +1,16 @@
+# I1 - Inference example 1 (construct O1: rdfs:subPropertyOf)
+# Explicit facts : match:IPL-2026-M01 qp:hasWinner team:RCB ; qp:hasLoser team:SRH .
+# Rule           : qp:hasWinner rdfs:subPropertyOf qp:hasParticipant .
+#                  qp:hasLoser  rdfs:subPropertyOf qp:hasParticipant .
+# Inferred fact  : match:IPL-2026-M01 qp:hasParticipant team:RCB , team:SRH .
+# Inference off -> 0 rows. Inference on -> RCB, SRH.
+
+PREFIX qp:    <http://example.org/qualifypath/ontology#>
+PREFIX match: <http://example.org/qualifypath/resource/match/>
+
+SELECT ?participant
+WHERE {
+  match:IPL-2026-M01 qp:hasParticipant ?t .
+  ?t qp:shortName ?participant .
+}
+ORDER BY ?participant

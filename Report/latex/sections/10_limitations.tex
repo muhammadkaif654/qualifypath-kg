@@ -1,0 +1,23 @@
+\section{Limitations and future work}
+\begin{itemize}
+  \item \textbf{Single snapshot.} The graph reflects one point in the season (after match~39), where no team is
+        yet qualified or eliminated. Loading later results would exercise rules R4 and R5 more; the remaining
+        results exist in the ball-by-ball file but would need the same cleaning as matches 1--39.
+  \item \textbf{Points-only qualification rules.} R4 and R5 ignore NRR and the fact that other teams play each
+        other, so they are conservative: correct when they fire, but they may leave a team ``in contention''
+        longer than strictly necessary. An exact answer needs enumerating outcomes of the remaining fixtures.
+  \item \textbf{Keyword-based retrieval.} Entity linking and intent detection use aliases and keyword patterns.
+        Unusual phrasings or spelling mistakes can miss an intent; the app then retrieves less and the LLM
+        answers ``insufficient evidence'' rather than guessing. An LLM-based query planner or text-to-SPARQL
+        would generalise better, at the cost of more failure modes to check.
+  \item \textbf{Scope of the graph.} Players, toss decisions and playoffs are not modelled, so questions about
+        them are refused.
+  \item \textbf{Source data quality.} The dataset contains errors (match 32 winner, run totals, a missing minus
+        sign); we corrected the ones we could detect and validated against the official table, but undetected
+        errors could remain.
+  \item \textbf{LLM dependence.} Answers depend on a hosted model (Groq) whose catalogue changes over time (the
+        originally planned Llama~3.3 model was no longer available to our key), so the model is configurable in
+        \texttt{.env}.
+  \item \textbf{Evaluation size.} Ten questions with hand-reviewed verdicts are enough to show the effect of
+        grounding, not to estimate accuracy precisely.
+\end{itemize}

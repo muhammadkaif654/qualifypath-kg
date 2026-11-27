@@ -1,0 +1,27 @@
+\section{Running the system}\label{app:run}
+Full instructions are in the repository \texttt{README.md}. In short (Python 3.10+, from the repository root):
+\begin{lstlisting}[language=bash]
+pip install -r requirements.txt
+cp .env.example .env                        # add your own GROQ_API_KEY
+python RDF_Knowledge_Graph/build_kg.py      # CSV -> RDF, validation against the official table
+python SPARQL_Queries/run_queries.py        # OWL 2 RL + rules R1-R7 + queries Q01-Q11 + inference demos
+python scripts/evaluate_multihop.py         # Option C evaluation (150 questions)
+python scripts/run_cq_evaluation.py         # LLM-only vs KG-grounded (10 CQs)
+python scripts/explainability_examples.py   # provenance examples
+streamlit run app/streamlit_app.py          # application at http://localhost:8501
+python RDF_Knowledge_Graph/graphdb/load_graphdb.py --reset   # GraphDB repository (GraphDB running)
+\end{lstlisting}
+
+\section{Full answers of the comparative evaluation}\label{app:answers}
+\input{generated/cq_full_answers}
+
+\section{Commit history}\label{app:commits}
+Repository: \repoLink. Submission commit: \texttt{\headCommit}.
+
+{\footnotesize
+\begin{longtable}{p{1.4cm}p{2.8cm}p{2.0cm}p{8.6cm}}
+\toprule \textbf{Commit} & \textbf{Author} & \textbf{Date} & \textbf{Message} \\ \midrule \endfirsthead
+\toprule \textbf{Commit} & \textbf{Author} & \textbf{Date} & \textbf{Message} \\ \midrule \endhead
+\bottomrule \endfoot
+\input{generated/commits}
+\end{longtable}}

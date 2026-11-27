@@ -1,0 +1,88 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------- packages (all available on Overleaf)
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.1cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{amsmath,amssymb}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=indigo,citecolor=indigo,urlcolor=indigo]{hyperref}
+\usepackage{xurl}
+
+% ---------------------------------------------------------------- colours and styles
+\definecolor{indigo}{HTML}{4338CA}
+\definecolor{kgexplicit}{HTML}{059669}
+\definecolor{kginferred}{HTML}{2563EB}
+\definecolor{kgrule}{HTML}{7C3AED}
+\definecolor{kgpath}{HTML}{D97706}
+\definecolor{kgscenario}{HTML}{DC2626}
+\definecolor{kggenerated}{HTML}{475569}
+\definecolor{codebg}{HTML}{F8FAFC}
+
+\captionsetup{font=small,labelfont=bf}
+\setlist{itemsep=2pt,topsep=4pt}
+\titleformat{\section}{\Large\bfseries\color{indigo}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\renewcommand{\arraystretch}{1.18}
+
+\lstdefinelanguage{SPARQL}{
+  morekeywords={SELECT,WHERE,FILTER,OPTIONAL,UNION,PREFIX,INSERT,DELETE,GROUP,BY,ORDER,HAVING,DESC,ASC,BIND,AS,
+    VALUES,COUNT,SUM,ROUND,IF,EXISTS,NOT,COALESCE,ABS,DISTINCT,LIMIT,a,IRI,CONCAT,STR,STRAFTER,STRSTARTS},
+  sensitive=false, morecomment=[l]{\#}, morestring=[b]"}
+\lstset{basicstyle=\ttfamily\scriptsize, backgroundcolor=\color{codebg}, frame=single, rulecolor=\color{gray!40},
+  breaklines=true, columns=fullflexible, keywordstyle=\color{indigo}\bfseries, commentstyle=\color{gray}\itshape,
+  stringstyle=\color{kgexplicit}, showstringspaces=false, xleftmargin=2pt, xrightmargin=2pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small QualifyPath-KG --- Iterations 1 \& 2}
+\fancyhead[R]{\small AI-3001 KRR, Fall 2026}
+\fancyfoot[C]{\small\thepage}
+
+% ---------------------------------------------------------------- project values and generated numbers
+\input{config}
+\input{generated/stats}
+\input{generated/gitinfo}
+\input{generated/cq_eval_stats}
+
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\shot}[3][\linewidth]{% screenshot: width, file, caption
+  \begin{figure}[H]\centering\includegraphics[width=#1]{figures/#2}\caption{#3}\label{fig:#2}\end{figure}}
+
+\begin{document}
+\input{sections/00_title}
+\tableofcontents
+\clearpage
+\input{sections/01_introduction}
+\input{sections/02_dataset}
+\input{sections/03_competency_questions}
+\input{sections/04_ontology_kg}
+\input{sections/05_sparql_inference}
+\input{sections/06_multihop}
+\input{sections/07_application}
+\input{sections/08_evaluation}
+\input{sections/09_explainability}
+\input{sections/10_limitations}
+\input{sections/11_contributions}
+
+\clearpage
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\clearpage
+\appendix
+\input{sections/12_appendix}
+\end{document}

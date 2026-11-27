@@ -1,0 +1,22 @@
+# Q01 - CQ15: What qualification rules apply to IPL 2026, and in what order are tie-breaks applied?
+# Features: basic graph pattern, property path (qp:hasQualificationRule/qp:qualifyingPlaces), ORDER BY
+
+PREFIX qp:     <http://example.org/qualifypath/ontology#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX season: <http://example.org/qualifypath/resource/season/>
+
+SELECT ?season ?pointsForWin ?pointsForLoss ?pointsForNoResult ?oversQuota
+       ?qualifyingPlaces ?tieBreakRank ?tieBreak
+WHERE {
+  season:IPL-2026 rdfs:label ?season ;
+                  qp:oversQuota ?oversQuota ;
+                  qp:hasPointsRule ?pr ;
+                  qp:hasQualificationRule/qp:qualifyingPlaces ?qualifyingPlaces ;
+                  qp:hasTieBreak ?tb .
+  ?pr qp:pointsForWin ?pointsForWin ;
+      qp:pointsForLoss ?pointsForLoss ;
+      qp:pointsForNoResult ?pointsForNoResult .
+  ?tb qp:tieBreakRank ?tieBreakRank ;
+      qp:criterionName ?tieBreak .
+}
+ORDER BY ?tieBreakRank

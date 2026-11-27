@@ -1,0 +1,53 @@
+\section{Dataset and data preparation}
+
+\subsection{Source}
+We use the \emph{IPL 2026 -- Complete Dataset} by Data Knight on Kaggle \citep{kaggleipl2026} (CC0 public
+domain; compiled from ESPNcricinfo, the IPL website and Google). The untouched archive is kept in
+\texttt{Dataset/ipl-2026-complete-dataset.zip}.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{4.2cm}p{3.6cm}p{7.2cm}}
+\toprule
+\textbf{File} & \textbf{Rows} & \textbf{Used for} \\ \midrule
+\texttt{matches.csv} & 39 (matches 1--39) & results, scores, wickets, balls left $\rightarrow$ completed matches \\
+\texttt{deliveries.csv} & 17{,}477 balls, all 74 matches & batting order, legal balls, teams/date/venue of matches 40--70 $\rightarrow$ fixtures \\
+\texttt{venues.csv} & 12 & city and home team of each ground \\
+\texttt{points\_table.csv} & 10 teams after match 39 & validation only (official table) \\
+squads and player statistics & --- & not used: players are outside the qualification model \\
+\bottomrule
+\end{tabular}
+\caption{Source files and how they are used.}
+\end{table}
+
+\subsection{Cleaning and transformation}
+All cleaning is performed by \texttt{RDF\_Knowledge\_Graph/build\_kg.py}, which writes the cleaned match table
+(\texttt{Dataset/processed/league\_matches\_clean.csv}) and the RDF instance data.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{5.2cm}p{9.9cm}}
+\toprule
+\textbf{Problem found} & \textbf{Resolution} \\ \midrule
+Ball-by-ball runs differ from the scorecard in 23 innings (1--3 runs) & Runs and wickets taken from \texttt{matches.csv}; ball-by-ball data only for batting order, legal balls and fixtures \\
+Match 32 winner recorded as LSG; RR actually won by 40 runs & Winner derived from the scores; \texttt{match\_winner} trusted only for super-over ties \\
+Match 13 rain-shortened to 11 overs a side & Detected automatically; stored as \texttt{qp:oversPerSide 11} for the NRR rule \\
+Overs such as 19.4 cannot be used in arithmetic & Balls faced stored instead (19.4 overs $=$ 118 balls) \\
+All-out innings count as the full quota for NRR & \texttt{qp:allOut} flag; rule R2 uses the quota \\
+Venue names spelled up to three ways; two venues missing & Keyword matching to one canonical venue per ground; Raipur and Dharamshala added (13 venues) \\
+Team abbreviations vs.\ full names & One team resource with \texttt{qp:shortName} and \texttt{rdfs:label} \\
+Two date formats & Converted to \texttt{xsd:date} \\
+Abandoned match 12 and super-over balls & Match 12 is a \texttt{qp:NoResultMatch} with no innings; super-over innings ignored \\
+\bottomrule
+\end{tabular}
+\caption{Data-quality problems and how they were resolved.}
+\end{table}
+
+\subsection{Validation}
+After cleaning, the standings derived by our rules match the official points table after match~39 for all
+ten teams on played, won, lost, no-result and points, and on NRR to three decimals for nine teams. The tenth,
+KKR, is $-0.751$ in our graph and $+0.751$ in the file; with two wins and five losses a positive NRR is
+implausible and the magnitude matches exactly, so we treat it as a dropped minus sign in the source.
+
+\textbf{Iteration 2 correction.} Iteration~1 assumed NRR as the only tie-break. Researching the IPL playing
+conditions showed that clause 16.10.2 ranks teams level on points first by \emph{most wins} and then by
+\emph{NRR} \citep{crictracker2024tiebreak}. The ontology instance data and rule R7 now encode both criteria;
+the positions after match~39 are unchanged because every pair level on points is also level on wins.

@@ -1,0 +1,50 @@
+\section{Knowledge-grounded LLM application}\label{sec:app}
+
+\subsection{Background and research}
+Retrieval-augmented generation (RAG) \citep{lewis2020rag} conditions a language model on documents retrieved at
+query time, so answers can rely on knowledge the model was never trained on. Pan et al.\ \citep{pan2024unifying}
+classify ways of combining LLMs and knowledge graphs; our system is a \emph{KG-enhanced LLM at inference time}:
+the graph supplies facts and the LLM only phrases the answer. GraphRAG \citep{edge2024graphrag} builds community
+summaries of a graph for broad, global questions; our questions are instead precise and entity-centred
+(``how many points can LSG still reach?''), so we generate context with SPARQL queries and multi-hop paths
+rather than summaries. Ji et al.\ \citep{ji2023hallucination} define hallucination as content unsupported by the
+source; this motivated two design choices: every claim must cite a retrieved fact, and the system must refuse
+when the graph has no evidence.
+
+\subsection{Pipeline}
+\begin{enumerate}
+  \item \textbf{Entity linking.} Team names and aliases (``Lucknow'', ``Rajasthan Royals'', ``RR''), venues,
+        cities and match numbers are matched against graph labels (\texttt{qualifypath/retriever.py}).
+  \item \textbf{Intent detection.} Keyword patterns map the question to competency-question types: standings,
+        NRR, fixtures, qualification, rivals, what-if, results, venues, home record, rules, head-to-head.
+  \item \textbf{Retrieval.} The Iteration~1 SPARQL queries (Q01, Q03, standings from R1--R7) and the multi-hop
+        reasoner produce numbered facts \texttt{[F1]\ldots[Fn]}, each tagged \emph{explicit},
+        \emph{inferred}, \emph{rule-derived}, \emph{reasoning path} or \emph{scenario}.
+  \item \textbf{Generation.} The facts and the question are sent to the LLM (\evalModel{} on Groq
+        \citep{groqdocs,openai2025gptoss}, temperature 0) with the system prompt below.
+  \item \textbf{Answer and evidence.} The app shows the answer with highlighted citations, the cited facts,
+        all retrieved context, the reasoning-path graph, and explicit vs.\ inferred vs.\ generated text.
+\end{enumerate}
+
+\textbf{Insufficient evidence.} If retrieval finds nothing in the graph for the question, the LLM is
+\emph{not called} and the app answers ``INSUFFICIENT EVIDENCE''. If facts are retrieved but do not cover the
+question (for example a player's runs, which the graph does not model), the prompt requires the same reply.
+Answers that cite no fact are flagged as unsupported.
+
+\lstinputlisting[caption={System prompt for the KG-grounded condition (\texttt{prompts/grounded\_system.txt}).},basicstyle=\ttfamily\scriptsize]{generated/queries/grounded_system.txt}
+
+\subsection{Application}
+The Streamlit \citep{streamlitdocs} application has four pages: \emph{Ask the graph} (question answering with an
+optional side-by-side LLM-only answer), \emph{Multi-hop reasoner}, \emph{Knowledge graph explorer} and
+\emph{Evaluation}. The graph is loaded once at start-up (about three seconds), and every SPARQL call is
+serialised because rdflib's parser is not thread-safe.
+
+\shot[0.86\linewidth]{app_ask_lsg_compare.jpg}{Ask page: the KG-grounded answer (left) cites rule-derived and
+multi-hop facts; the same LLM without the graph (right) invents LSG's record (8 points, 7 matches left) and NRR.}
+\shot[0.86\linewidth]{app_ask_insufficient.jpg}{Insufficient evidence: the graph models teams and matches, not
+players, so the app refuses instead of inventing a top scorer.}
+\shot[0.86\linewidth]{app_ask_kkr_scenario.jpg}{A what-if question: the answer is derived from a labelled
+scenario, not presented as fact.}
+\shot[0.86\linewidth]{app_ask_rr_beaten.jpg}{Multi-hop answer with match paths: teams RR has beaten and where.}
+\shot[0.86\linewidth]{app_explorer_rr.jpg}{Knowledge graph explorer: rule-derived league table, qualification
+race and RR's neighbourhood graph.}
