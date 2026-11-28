@@ -30,24 +30,33 @@ left, right = st.columns([1.15, 1])
 with left:
     st.markdown("#### League table after match 39")
     st.caption("Ranked by points, then most wins, then net run rate (IPL rule 16.10.2). Top 4 qualify.")
-    st.dataframe(table.style.apply(lambda r: ["background-color:#eef2ff" if r.Pos <= 4 else "" for _ in r], axis=1)
-                 .format({"NRR": "{:+.3f}"}), hide_index=True, use_container_width=True, height=400)
+    head = "".join(f"<th>{h}</th>" for h in ["#", "Team", "Pts", "W", "L", "NR", "NRR", "Max", "Status"])
+    body = "".join(
+        f"<tr class='{'q' if r.Pos <= 4 else ''}'><td>{r.Pos}</td>"
+        f"<td><div class='qp-teamcell'>{ui.team_badge(r.Team, 30)}<span>{r.Name}</span></div></td>"
+        f"<td><b>{r.Pts}</b></td><td>{r.W}</td><td>{r.L}</td><td>{r.NR}</td><td>{r.NRR:+.3f}</td>"
+        f"<td>{r['Max reachable']}</td><td style='white-space:nowrap'><span class='qp-muted'>"
+        f"{r['Status (R4–R6)'].replace('In-contention', 'In contention')}</span></td></tr>"
+        for _, r in table.iterrows())
+    st.markdown(f"<table class='qp-table'><tr>{head}</tr>{body}</table>", unsafe_allow_html=True)
 with right:
     st.markdown("#### Qualification race")
     fig = go.Figure()
-    fig.add_bar(y=table.Team, x=table.Pts, name="Points now", orientation="h", marker_color="#4f46e5")
+    colours = [ui.TEAMS[t][2] if t == "GT" else ui.TEAMS[t][1] for t in table.Team]  # GT navy is invisible on dark
+    fig.add_bar(y=table.Team, x=table.Pts, name="Points now", orientation="h", marker_color=colours)
     fig.add_bar(y=table.Team, x=table["Max reachable"] - table.Pts, name="Still reachable", orientation="h",
-                marker_color="#c7d2fe")
+                marker_color="rgba(148,163,184,.28)", marker_line=dict(color=colours, width=1.5))
     fourth = int(table.Pts.iloc[3])
-    fig.add_vline(x=fourth, line_dash="dash", line_color="#dc2626",
+    fig.add_vline(x=fourth, line_dash="dash", line_color="#f87171",
                   annotation_text=f"4th place now: {fourth}", annotation_position="top")
-    fig.update_layout(barmode="stack", height=400, margin=dict(l=10, r=10, t=30, b=10),
-                      yaxis=dict(autorange="reversed"), legend=dict(orientation="h", y=-0.12),
-                      plot_bgcolor="white", xaxis_title="points")
+    fig.update_layout(barmode="stack", height=560, margin=dict(l=10, r=10, t=30, b=10),
+                      yaxis=dict(autorange="reversed"), legend=dict(orientation="h", y=-0.08),
+                      paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(15,23,42,.6)", xaxis_title="points")
     st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("#### Team neighbourhood")
 teams = [kg.label(t) for t in kg.teams()]
+st.markdown(" ".join(ui.team_badge(t, 38) for t in teams), unsafe_allow_html=True)
 team = st.segmented_control("Team", teams, default=st.query_params.get("team", "RR"))
 if team:
     T = TEAM[team]
@@ -77,11 +86,13 @@ if team:
         st.dataframe(pd.DataFrame(res_rows), hide_index=True, use_container_width=True, height=420)
     with c2:
         st.markdown("**Neighbourhood graph** — team → matches → opponent and city")
-        colour = {"Won": "#059669", "Lost": "#dc2626", "Scheduled": "#94a3b8", "No result": "#d97706"}
+        colour = {"Won": "#059669", "Lost": "#dc2626", "Scheduled": "#475569", "No result": "#d97706"}
+        _, tbg, tring, tfg = ui.TEAMS[team]
         dot = ['digraph G { rankdir=LR; bgcolor="transparent"; nodesep=0.12; ranksep=0.9;',
-               'node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, color="#cbd5e1", '
-               'fillcolor="#f8fafc"]; edge [color="#94a3b8", arrowsize=0.6];',
-               f'T [label="{team}", fillcolor="#4f46e5", fontcolor="white", color="#4f46e5", fontsize=16, shape=circle];']
+               'node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, color="#334155", '
+               'fillcolor="#1e293b", fontcolor="#e2e8f0"]; edge [color="#64748b", arrowsize=0.6];',
+               f'T [label="{team}", fillcolor="{tbg}", fontcolor="{tfg}", color="{tring}", penwidth=4, fontsize=18, '
+               f'shape=circle, width=1.1];']
         opps, cities = set(), set()
         for rr in res_rows:
             m = f'M{rr["Match"]}'
@@ -90,14 +101,16 @@ if team:
             city = kg.label(g.value(v, QP.locatedIn))
             dot.append(f'{m} [label="Match {rr["Match"]}\\n{rr["Result"]}", fillcolor="{colour[rr["Result"]]}", '
                        f'fontcolor="white", color="{colour[rr["Result"]]}"];')
-            dot.append(f'T -> {m} [label="participatesIn", fontsize=8, fontcolor="#2563eb", color="#2563eb"];')
+            dot.append(f'T -> {m} [label="participatesIn", fontsize=8, fontcolor="#60a5fa", color="#3b82f6"];')
             opps.add(rr["Opponent"])
             cities.add(city)
             dot.append(f'{m} -> "o_{rr["Opponent"]}"; {m} -> "c_{city}" [style=dashed];')
         for o in opps:
-            dot.append(f'"o_{o}" [label="{o}", fillcolor="#e0e7ff", color="#6366f1"];')
+            _, obg, oring, ofg = ui.TEAMS.get(o, (o, "#334155", "#64748b", "#ffffff"))
+            dot.append(f'"o_{o}" [label="{o}", shape=circle, fillcolor="{obg}", color="{oring}", fontcolor="{ofg}", '
+                       f'penwidth=2.5, width=0.7, fixedsize=true, fontsize=10];')
         for c in cities:
-            dot.append(f'"c_{c}" [label="📍 {c}", fillcolor="#fef3c7", color="#d97706"];')
+            dot.append(f'"c_{c}" [label="📍 {c}", fillcolor="#3b2a05", color="#f59e0b", fontcolor="#fde68a"];')
         dot.append("}")
         st.graphviz_chart("\n".join(dot), use_container_width=True)
         st.caption("Green = won · red = lost · grey = scheduled · solid arrow → opponent · dashed arrow → city. "

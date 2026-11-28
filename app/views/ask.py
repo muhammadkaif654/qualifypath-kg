@@ -73,7 +73,7 @@ with cols[0]:
     st.markdown(ui.cite(ans.answer), unsafe_allow_html=True)
     if ans.warning:
         st.error(ans.warning)
-    chips = [f"<span class='qp-chip'>👥 {kg.label(t)}</span>" for t in r.teams] + \
+    chips = [f"<span class='qp-chip'>{ui.team_badge(kg.label(t), 22)} {kg.full_name(t)}</span>" for t in r.teams] + \
             [f"<span class='qp-chip'>🏟️ {kg.full_name(v)}</span>" for v in r.venues] + \
             [f"<span class='qp-chip'>#️⃣ match {m}</span>" for m in r.matches] + \
             [f"<span class='qp-chip'>🎯 {i}</span>" for i in r.intents]

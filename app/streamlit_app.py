@@ -16,6 +16,11 @@ sys.path.insert(0, str(HERE.parent))
 
 st.set_page_config(page_title="QualifyPath-KG", page_icon="🏏", layout="wide", initial_sidebar_state="expanded")
 
+import ui  # noqa: E402
+
+ui.style()
+ui.splash()  # blue cricket intro, once per browser session (?nosplash=1 skips it)
+
 pages = [
     st.Page("views/ask.py", title="Ask the graph", icon="💬", url_path="ask", default=True),
     st.Page("views/reasoner.py", title="Multi-hop reasoner", icon="🧭", url_path="reasoner"),
