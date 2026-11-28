@@ -25,13 +25,16 @@ PORT = 9333
 WIDTH = 1500
 
 SHOTS = [  # (file, path, query, seconds to wait)
-    ("app_ask_lsg_compare", "", {"q": "Can Lucknow Super Giants still qualify for the top 4?", "compare": "1"}, 45),
-    ("app_ask_rr_beaten", "", {"q": "Which teams has RR beaten and at which venues?"}, 35),
-    ("app_ask_insufficient", "", {"q": "Who is the top run scorer for Rajasthan Royals?"}, 30),
-    ("app_ask_kkr_scenario", "", {"q": "If KKR lose their last match, which teams are certain to finish above them?"}, 35),
+    ("app_ask_lsg_compare", "ask", {"q": "Can Lucknow Super Giants still qualify for the top 4?", "compare": "1"}, 45),
+    ("app_ask_rr_beaten", "ask", {"q": "Which teams has RR beaten and at which venues?"}, 35),
+    ("app_ask_insufficient", "ask", {"q": "Who is the top run scorer for Rajasthan Royals?"}, 30),
+    ("app_ask_kkr_scenario", "ask", {"q": "If KKR lose their last match, which teams are certain to finish above them?"}, 35),
     ("app_reasoner_lsg", "reasoner", {"task": "Qualification analysis (CQ5–CQ7)", "a": "LSG"}, 15),
     ("app_reasoner_rr_venues", "reasoner", {"task": "Venues played — inferred chain (CQ13)", "a": "RR"}, 15),
-    ("app_explorer_rr", "explorer", {"team": "RR"}, 18),
+    ("app_overview", "", {}, 15),
+    ("app_points", "points", {}, 12),
+    ("app_predictor_lsg", "predictor", {"team": "LSG"}, 15),
+    ("app_graph_rr", "graph", {"team": "RR"}, 20),
     ("app_evaluation", "evaluation", {}, 15),
 ]
 
@@ -68,7 +71,7 @@ def main(only=None):
             tab = Tab(target["webSocketDebuggerUrl"])
             tab.call("Page.enable")
             tab.call("Emulation.setDeviceMetricsOverride", width=WIDTH, height=1000, deviceScaleFactor=1.5, mobile=False)
-            url = f"{APP}/{path}" + (("?" + urllib.parse.urlencode(query)) if query else "")
+            url = f"{APP}/{path}?" + urllib.parse.urlencode({**query, "nosplash": "1"})
             tab.call("Page.navigate", url=url)
             time.sleep(wait)
             h = tab.call("Runtime.evaluate", returnByValue=True, expression=(
