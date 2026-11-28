@@ -60,7 +60,7 @@
 \newcommand{\figref}[1]{Figure~\ref{#1}}
 \newcommand{\tabref}[1]{Table~\ref{#1}}
 \newcommand{\shot}[3][\linewidth]{% screenshot: width, file, caption
-  \begin{figure}[H]\centering\includegraphics[width=#1]{figures/#2}\caption{#3}\label{fig:#2}\end{figure}}
+  \begin{figure}[H]\centering\includegraphics[width=#1,height=0.8\textheight,keepaspectratio]{figures/#2}\caption{#3}\label{fig:#2}\end{figure}}
 
 \begin{document}
 \input{sections/00_title}

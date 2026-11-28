@@ -34,17 +34,39 @@ Answers that cite no fact are flagged as unsupported.
 \lstinputlisting[caption={System prompt for the KG-grounded condition (\texttt{prompts/grounded\_system.txt}).},basicstyle=\ttfamily\scriptsize]{generated/queries/grounded_system.txt}
 
 \subsection{Application}
-The Streamlit \citep{streamlitdocs} application has four pages: \emph{Ask the graph} (question answering with an
-optional side-by-side LLM-only answer), \emph{Multi-hop reasoner}, \emph{Knowledge graph explorer} and
-\emph{Evaluation}. The graph is loaded once at start-up (about three seconds), and every SPARQL call is
-serialised because rdflib's parser is not thread-safe.
+The Streamlit \citep{streamlitdocs} application is organised as a small cricket-analytics product with four
+sections. Every page reads live from the graph, the rules R1--R7, the multi-hop reasoner or the grounded QA
+pipeline; nothing is hard-coded.
+\begin{itemize}
+  \item \textbf{Tournament} --- \emph{Overview} (snapshot statistics, leaders and the qualification race),
+        \emph{Points Table} (rule-derived standings with status, form and tie-break explanations) and
+        \emph{Match Center} (all 70 matches with both innings, filterable by team and city).
+  \item \textbf{Intelligence} --- \emph{Qualification Predictor} (wins needed per team from the multi-hop
+        reasoner: eliminated, depends on other results, or guaranteed; no probabilities), \emph{Scenario Explorer}
+        (choose outcomes of the remaining fixtures and recompute points and status with the same R4--R6 logic;
+        always labelled hypothetical and never written to the graph), \emph{Ask AI} (chat-style KG-grounded
+        question answering with an optional side-by-side LLM-only answer) and \emph{Multi-hop Reasoner}.
+  \item \textbf{Knowledge Graph} --- \emph{Graph Explorer} (interactive graph; clicking a node lists every
+        triple about it labelled explicit, OWL-inferred or rule-derived), \emph{Evidence \& Sources} (provenance
+        counts, the SPARQL queries Q01--Q11 run live, and the rule listings) and \emph{Evaluation}.
+  \item \textbf{Project} --- \emph{About} (architecture, design choices and team).
+\end{itemize}
+Each Ask AI answer separates graph facts, derived results, reasoning paths, hypothetical scenarios and the
+generated text, and highlights the cited facts. The graph is loaded once at start-up (about three seconds), and
+every SPARQL call is serialised because rdflib's parser is not thread-safe.
 
-\shot[0.86\linewidth]{app_ask_lsg_compare.jpg}{Ask page: the KG-grounded answer (left) cites rule-derived and
-multi-hop facts; the same LLM without the graph (right) invents LSG's record (8 points, 7 matches left) and NRR.}
+\shot[0.86\linewidth]{app_overview.jpg}{Overview: snapshot after match 39, leaders and the qualification race
+(points now versus maximum still reachable).}
+\shot[0.86\linewidth]{app_points.jpg}{Points table derived by rules R1--R7, with status from R4--R6 and the
+tie-breaks explained (SRH ahead of RR on net run rate with equal points and wins).}
+\shot[0.86\linewidth]{app_predictor_lsg.jpg}{Qualification Predictor for LSG: with fewer than 3 wins LSG are
+eliminated whatever else happens; no number of wins guarantees a top-4 place on points alone.}
+\shot[0.86\linewidth]{app_ask_lsg_compare.jpg}{Ask AI: the KG-grounded answer (left) cites retrieved facts and
+gives LSG's correct record; the same LLM without the graph (right) invents it (6 points, 3--2--1).}
 \shot[0.86\linewidth]{app_ask_insufficient.jpg}{Insufficient evidence: the graph models teams and matches, not
 players, so the app refuses instead of inventing a top scorer.}
-\shot[0.86\linewidth]{app_ask_kkr_scenario.jpg}{A what-if question: the answer is derived from a labelled
-scenario, not presented as fact.}
+\shot[0.86\linewidth]{app_ask_kkr_scenario.jpg}{A what-if question: the answer is derived from labelled
+hypothetical-scenario facts, shown separately from graph facts and derived results.}
 \shot[0.86\linewidth]{app_ask_rr_beaten.jpg}{Multi-hop answer with match paths: teams RR has beaten and where.}
-\shot[0.86\linewidth]{app_explorer_rr.jpg}{Knowledge graph explorer: rule-derived league table, qualification
-race and RR's neighbourhood graph.}
+\shot[0.86\linewidth]{app_graph_rr.jpg}{Graph Explorer: RR's neighbourhood (matches, opponents, venues, cities and
+standing entry) and the triples of the selected node with their provenance.}
