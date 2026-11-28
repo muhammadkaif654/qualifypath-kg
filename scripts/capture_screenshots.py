@@ -7,6 +7,7 @@ Output: Visualization/app_*.png
 """
 import base64
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -20,20 +21,20 @@ import websocket
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "Visualization"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-APP = "http://localhost:8501"
+APP = os.environ.get("QP_APP", "http://localhost:8501")
 PORT = 9333
 WIDTH = 1500
 
 SHOTS = [  # (file, path, query, seconds to wait)
+    ("app_overview", "", {}, 15),
+    ("app_points", "points", {}, 12),
+    ("app_predictor_lsg", "predictor", {"team": "LSG"}, 15),
     ("app_ask_lsg_compare", "ask", {"q": "Can Lucknow Super Giants still qualify for the top 4?", "compare": "1"}, 45),
     ("app_ask_rr_beaten", "ask", {"q": "Which teams has RR beaten and at which venues?"}, 35),
     ("app_ask_insufficient", "ask", {"q": "Who is the top run scorer for Rajasthan Royals?"}, 30),
     ("app_ask_kkr_scenario", "ask", {"q": "If KKR lose their last match, which teams are certain to finish above them?"}, 35),
     ("app_reasoner_lsg", "reasoner", {"task": "Qualification analysis (CQ5–CQ7)", "a": "LSG"}, 15),
     ("app_reasoner_rr_venues", "reasoner", {"task": "Venues played — inferred chain (CQ13)", "a": "RR"}, 15),
-    ("app_overview", "", {}, 15),
-    ("app_points", "points", {}, 12),
-    ("app_predictor_lsg", "predictor", {"team": "LSG"}, 15),
     ("app_graph_rr", "graph", {"team": "RR"}, 20),
     ("app_evaluation", "evaluation", {}, 15),
 ]

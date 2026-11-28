@@ -21,7 +21,7 @@ User question → KG retrieval + multi-hop reasoning → retrieved facts → LLM
 | `SPARQL_Queries/` | Queries Q01–Q11, SPARQL Update rules R1–R7 (`rules/`), inference demos I1–I3, `run_queries.py` |
 | `qualifypath/` | Python package: graph loading with provenance (`kg.py`), multi-hop reasoner (`multihop.py`), retriever (`retriever.py`), LLM client (`llm.py`), QA pipeline (`qa.py`) |
 | `prompts/` | System prompts for the KG-grounded and LLM-only conditions |
-| `app/` | Streamlit application: grounded Q&A page and multi-hop reasoner page |
+| `app/` | Streamlit application: Overview, Points Table, Match Center, Qualification Predictor, Scenario Explorer, Ask AI (grounded Q&A), Multi-hop Reasoner, Graph Explorer, Evidence & Sources, Evaluation, About |
 | `scripts/` | Evaluation: multi-hop vs ground truth, LLM-only vs KG-grounded (10 CQs), explainability examples |
 | `Results/` | Iteration 1 query outputs and inference examples; `iteration2/` evaluation results |
 | `Visualization/` | Ontology, season and team diagrams; GraphDB screenshots |

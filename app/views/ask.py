@@ -1,5 +1,6 @@
 """Ask AI: chat-style KG-grounded question answering. Each answer separates graph facts, derived results,
 hypothetical scenarios and reasoning, cites its evidence, and can be compared with an LLM-only baseline."""
+import re
 import time
 
 import pandas as pd
@@ -99,7 +100,8 @@ def render_answer(question, ans, only, latest):
                             unsafe_allow_html=True)
                 st.markdown("".join(ui.fact_card(f, f.id in cited_ids) for f in items[:10]), unsafe_allow_html=True)
         st.markdown("**Generated text — the LLM's answer**")
-        st.markdown(f"<div class='qp-fact'>{ui.badge('generated')}{ui.cite(ans.answer)}</div>", unsafe_allow_html=True)
+        bold = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", ui.cite(ans.answer))
+        st.markdown(f"<div class='qp-fact'>{ui.badge('generated')}{bold}</div>", unsafe_allow_html=True)
     with t_reason:
         paths = [p for res in r.results for p in res.paths]
         if paths:
